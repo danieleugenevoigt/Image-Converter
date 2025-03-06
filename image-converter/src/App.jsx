@@ -1,21 +1,46 @@
-import { useState } from 'react';
-import './App.css';
+// filepath: /Users/danielvoigt/Code/Image_Converter/Image-Converter/image-converter/src/App.jsx
+import { useState } from "react";
+import { open } from "@tauri-apps/plugin-dialog"; // Import the open function from the dialog plugin
+import "./App.css";
 
 function App() {
-  const [sourcePath, setSourcePath] = useState('');
-  const [destinationPath, setDestinationPath] = useState('');
+  const [sourcePath, setSourcePath] = useState("");
+  const [destinationPath, setDestinationPath] = useState("");
 
   const handleBrowseSource = async () => {
-    if (window.electron) {
-      const path = await window.electron.openDirectory();
-      if (path) setSourcePath(path);
+    console.log("Browser Source Clicked"); // Debugging log
+    try {
+      const selected = await open({
+        directory: true, // Open a directory selector
+      });
+
+      if (selected) {
+        console.log("Source folder selected:", selected);
+        setSourcePath(selected); // Set the path state to selected folder
+      } else {
+        console.log("No folder selected");
+      }
+    } catch (error) {
+      console.error("Error selecting source folder:", error); // Log any error
     }
   };
 
   const handleBrowseDestination = async () => {
-    if (window.electron) {
-      const path = await window.electron.openDirectory();
-      if (path) setDestinationPath(path);
+    console.log("Browser Destination Clicked"); // Debugging log
+    try {
+      const selected = await open({
+        directory: true, // Open a directory selector
+        multiple: false, // Allow only one folder to be selected
+      });
+
+      if (selected) {
+        console.log("Destination folder selected:", selected);
+        setDestinationPath(selected); // Set the destination folder path
+      } else {
+        console.log("No folder selected");
+      }
+    } catch (error) {
+      console.error("Error selecting destination folder:", error);
     }
   };
 

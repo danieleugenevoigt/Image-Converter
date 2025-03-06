@@ -1,11 +1,26 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "default",
+  "identifier": "main-src-tauri-capabilities-default",
   "description": "enables the default permissions",
   "windows": [
     "main"
   ],
   "permissions": [
-    "core:default"
+    {
+      "identifier": "core:path:allow-resolve-directory",
+      "allow": [
+        {
+          "path": "/"
+        }
+      ]
+    },
+    {
+      "identifier": "dialog:allow-open",
+      "allow": [
+        {
+          "path": "/"
+        }
+      ]
+    }
   ]
 }
