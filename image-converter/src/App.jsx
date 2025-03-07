@@ -40,7 +40,7 @@ function App() {
     setMessage("Converting images...");
 
     try {
-      await invoke("convert_png_to_webp", { source: sourcePath, destination: destinationPath });
+      await invoke("convert_pngs_to_webp", { inputDir: sourcePath, outputDir: destinationPath });
       setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
