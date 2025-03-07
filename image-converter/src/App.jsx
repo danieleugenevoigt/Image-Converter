@@ -1,47 +1,53 @@
-// filepath: /Users/danielvoigt/Code/Image_Converter/Image-Converter/image-converter/src/App.jsx
 import { useState } from "react";
-import { open } from "@tauri-apps/plugin-dialog"; // Import the open function from the dialog plugin
+import { open } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
+
 import "./App.css";
 
 function App() {
   const [sourcePath, setSourcePath] = useState("");
   const [destinationPath, setDestinationPath] = useState("");
+  const [isConverting, setIsConverting] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleBrowseSource = async () => {
-    console.log("Browser Source Clicked"); // Debugging log
     try {
-      const selected = await open({
-        directory: true, // Open a directory selector
-      });
+      const selected = await open({ directory: true });
 
-      if (selected) {
-        console.log("Source folder selected:", selected);
-        setSourcePath(selected); // Set the path state to selected folder
-      } else {
-        console.log("No folder selected");
-      }
+      if (selected) setSourcePath(selected);
     } catch (error) {
-      console.error("Error selecting source folder:", error); // Log any error
+      console.error("Error selecting source folder:", error);
     }
   };
 
   const handleBrowseDestination = async () => {
-    console.log("Browser Destination Clicked"); // Debugging log
     try {
-      const selected = await open({
-        directory: true, // Open a directory selector
-        multiple: false, // Allow only one folder to be selected
-      });
+      const selected = await open({ directory: true });
 
-      if (selected) {
-        console.log("Destination folder selected:", selected);
-        setDestinationPath(selected); // Set the destination folder path
-      } else {
-        console.log("No folder selected");
-      }
+      if (selected) setDestinationPath(selected);
     } catch (error) {
       console.error("Error selecting destination folder:", error);
     }
+  };
+
+  const handleConvertImages = async () => {
+    if (!sourcePath || !destinationPath) {
+      setMessage("Please select both source and destination folders.");
+      return;
+    }
+
+    setIsConverting(true);
+    setMessage("Converting images...");
+
+    try {
+      await invoke("convert_png_to_webp", { source: sourcePath, destination: destinationPath });
+      setMessage("Conversion completed successfully!");
+    } catch (error) {
+      console.error("Error during conversion:", error);
+      setMessage("Error during conversion. Check the console for details.");
+    }
+
+    setIsConverting(false);
   };
 
   return (
@@ -51,28 +57,22 @@ function App() {
       <div className="path-container">
         <div className="path-input">
           <label>Source Folder:</label>
-          <input
-            type="text"
-            value={sourcePath}
-            onChange={(e) => setSourcePath(e.target.value)}
-            placeholder="Enter source folder path"
-          />
+          <input type="text" value={sourcePath} readOnly placeholder="Select source folder" />
           <button onClick={handleBrowseSource}>Browse</button>
         </div>
 
         <div className="path-input">
           <label>Destination Folder:</label>
-          <input
-            type="text"
-            value={destinationPath}
-            onChange={(e) => setDestinationPath(e.target.value)}
-            placeholder="Enter destination folder path"
-          />
+          <input type="text" value={destinationPath} readOnly placeholder="Select destination folder" />
           <button onClick={handleBrowseDestination}>Browse</button>
         </div>
       </div>
 
-      <button className="convert-button">Convert Images</button>
+      <button className="convert-button" onClick={handleConvertImages} disabled={isConverting}>
+        {isConverting ? "Converting..." : "Convert Images"}
+      </button>
+
+      {message && <p className="status-message">{message}</p>}
     </div>
   );
 }
