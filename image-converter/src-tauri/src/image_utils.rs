@@ -1,8 +1,9 @@
-use image::{ImageFormat, ImageReader};
 use std::fs;
 use std::fs::File;
-use std::io::BufWriter;
+use std::io::{BufWriter, Write};  // Corrected import syntax
 use std::path::Path;
+use image::{ImageFormat, ImageReader, GenericImageView};
+use webp::{Encoder, WebPConfig};
 
 /// Converts all PNG images in the input directory to WebP format in the output directory.
 #[tauri::command]
@@ -37,17 +38,31 @@ pub fn convert_pngs_to_webp(input_dir: String, output_dir: String) -> Result<(),
     Ok(())
 }
 
-/// Helper function to convert a single PNG image to WebP
-fn convert_image_to_webp(input_path: &Path, output_path: &Path) -> Result<(), String> {
+/// Converts a single image file to WebP format.
+fn convert_image_to_webp(
+    input_path: &std::path::Path, output_path: &std::path::Path) -> Result<(), String> {
+
+    // Open and decode the image file
     let img = ImageReader::open(input_path)
         .map_err(|e| e.to_string())?
         .decode()
         .map_err(|e| e.to_string())?;
 
+    // Convert the image to raw RGBA8 data
+    let (width, height) = img.dimensions();
+    let img = img.to_rgba8();
+
+    // Encode to WebP with a quality setting (0.0 = lowest, 100.0 = highest)
+    let quality = 75.0;
+    let encoder = Encoder::from_rgba(&img, width, height);
+    let webp_data = encoder.encode(quality);  // Returns WebPMemory (Vec<u8>)
+
+    // Create the output file and write the encoded WebP data
     let output_file = File::create(output_path).map_err(|e| e.to_string())?;
     let mut writer = BufWriter::new(output_file);
-
-    img.write_to(&mut writer, ImageFormat::WebP).map_err(|e| e.to_string())?;
+    
+    // Write the webp_data to the file
+    writer.write(&webp_data).map_err(|e| e.to_string())?;
 
     Ok(())
 }
