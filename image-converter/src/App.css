@@ -9,6 +9,47 @@
   margin: auto;
 }
 
+.file-types {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50VW;
+}
+.file-type {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.file-type input {
+  margin-right: 5px;
+}
+.file-type label {
+  cursor: pointer;
+}
+.file-type input:checked + label {
+  font-weight: bold;
+}
+.file-type input:checked + label::before {
+  content: '✓';
+  color: green;
+}
+.file-type input:not(:checked) + label::before {
+  content: '✗';
+  color: red;
+}
+.file-type label::before {
+  content: '✗';
+  color: red;
+  margin-right: 5px;
+}
+.file-type label {
+  cursor: pointer;
+  user-select: none;
+}
+
 .path-container {
   display: flex;
   flex-direction: column;

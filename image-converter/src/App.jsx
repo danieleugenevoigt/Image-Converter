@@ -9,6 +9,8 @@ function App() {
   const [destinationPath, setDestinationPath] = useState("");
   const [isConverting, setIsConverting] = useState(false);
   const [message, setMessage] = useState("");
+  const [fromFileType, setFromFileType] = useState(".png");
+  const [toFileType, setToFileType] = useState(".webp");
 
   const handleBrowseSource = async () => {
     try {
@@ -40,7 +42,7 @@ function App() {
     setMessage("Converting images...");
 
     try {
-      await invoke("convert_pngs_to_webp", { inputDir: sourcePath, outputDir: destinationPath });
+      await invoke("convert_images", { inputDir: sourcePath, outputDir: destinationPath, fromFileType });
       setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
@@ -65,6 +67,30 @@ function App() {
           <label>Destination Folder:</label>
           <input type="text" value={destinationPath} readOnly placeholder="Select destination folder" />
           <button onClick={handleBrowseDestination}>Browse</button>
+        </div>
+      </div>
+
+      <div className="file-types">
+        <div className="from-file-types">
+          <label>From File Types:</label>
+          <select value={fromFileType} onChange={(e) => setFromFileType(e.target.value)}>
+            <option value=".png">.png</option>
+            <option value=".jpg">.jpg</option>
+            <option value=".jpeg">.jpeg</option>
+            <option value=".gif">.gif</option>
+            <option value=".bmp">.bmp</option>
+            <option value=".tiff">.tiff</option>
+            <option value=".webp">.webp</option>
+          </select>
+        </div>
+        <div className="to-file-types">
+          <label>To File Type:</label>
+          <select value={toFileType} onChange={(e) => setToFileType(e.target.value)}>
+            <option value=".webp">.webp</option>
+            <option value=".jpeg">.jpeg</option>
+            <option value=".png">.png</option>
+            <option value=".tiff">.tiff</option>
+          </select>
         </div>
       </div>
 
