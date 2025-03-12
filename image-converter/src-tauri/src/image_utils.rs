@@ -7,7 +7,7 @@ use webp::{Encoder, WebPConfig};
 
 /// Converts all PNG images in the input directory to WebP format in the output directory.
 #[tauri::command]
-pub fn convert_pngs_to_webp(input_dir: String, output_dir: String) -> Result<(), String> {
+pub fn convert_images(input_dir: String, output_dir: String, input_file_type: String) -> Result<(), String> {
     let input_path = Path::new(&input_dir);
     let output_path = Path::new(&output_dir);
 
@@ -22,9 +22,9 @@ pub fn convert_pngs_to_webp(input_dir: String, output_dir: String) -> Result<(),
     for entry in entries {
         let entry = entry.map_err(|e| e.to_string())?;
         let path = entry.path();
-
+        
         // Process only .png files
-        if path.extension().and_then(|ext| ext.to_str()) == Some("png") {
+        if path.extension().and_then(|ext| ext.to_str()) == Some(input_file_type.as_str()) {
             let file_stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("converted");
             let output_file_path = output_path.join(format!("{}.webp", file_stem));
 

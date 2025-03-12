@@ -9,8 +9,8 @@ function App() {
   const [destinationPath, setDestinationPath] = useState("");
   const [isConverting, setIsConverting] = useState(false);
   const [message, setMessage] = useState("");
-  const [fromFileType, setFromFileType] = useState(".png");
-  const [toFileType, setToFileType] = useState(".webp");
+  const [fromFileType, setFromFileType] = useState("png");
+  const [toFileType, setToFileType] = useState("webp");
 
   const handleBrowseSource = async () => {
     try {
@@ -40,9 +40,14 @@ function App() {
 
     setIsConverting(true);
     setMessage("Converting images...");
+    console.log("Converting images with the following parameters:");
+    console.log("Source Path:", sourcePath);
+    console.log("Destination Path:", destinationPath);
+    console.log("From File Type:", fromFileType);
+    console.log("To File Type:", toFileType);
 
     try {
-      await invoke("convert_images", { inputDir: sourcePath, outputDir: destinationPath, fromFileType });
+      await invoke("convert_images", { inputDir: sourcePath, outputDir: destinationPath, inputFileType: fromFileType });
       setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
@@ -74,28 +79,28 @@ function App() {
         <div className="from-file-types">
           <label>From File Types:</label>
           <select value={fromFileType} onChange={(e) => setFromFileType(e.target.value)}>
-            <option value=".png">.png</option>
-            <option value=".jpg">.jpg</option>
-            <option value=".jpeg">.jpeg</option>
-            <option value=".gif">.gif</option>
-            <option value=".bmp">.bmp</option>
-            <option value=".tiff">.tiff</option>
-            <option value=".webp">.webp</option>
+            <option value="png">png</option>
+            <option value="jpg">jpg</option>
+            <option value="jpeg">jpeg</option>
+            <option value="gif">gif</option>
+            <option value="bmp">bmp</option>
+            <option value="tiff">tiff</option>
+            <option value="webp">webp</option>
           </select>
         </div>
         <div className="to-file-types">
           <label>To File Type:</label>
           <select value={toFileType} onChange={(e) => setToFileType(e.target.value)}>
-            <option value=".webp">.webp</option>
-            <option value=".jpeg">.jpeg</option>
-            <option value=".png">.png</option>
-            <option value=".tiff">.tiff</option>
+            <option value="webp">webp</option>
+            <option value="jpeg">jpeg</option>
+            <option value="png">png</option>
+            <option value="tiff"> stiff</option>
           </select>
         </div>
       </div>
 
       <button className="convert-button" onClick={handleConvertImages} disabled={isConverting}>
-        {isConverting ? "Converting..." : "Convert Images"}
+        {isConverting ? "Converting..." : "handle Convert Images"}
       </button>
 
       {message && <p className="status-message">{message}</p>}
