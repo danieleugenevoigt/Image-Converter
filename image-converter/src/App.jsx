@@ -47,7 +47,11 @@ function App() {
     console.log("To File Type:", toFileType);
 
     try {
-      await invoke("convert_images", { inputDir: sourcePath, outputDir: destinationPath, inputFileType: fromFileType });
+      await invoke("convert_images", { 
+        inputDir: sourcePath, 
+        outputDir: destinationPath, 
+        inputFileType: fromFileType, 
+        outputFileType: toFileType });
       setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);

@@ -7,7 +7,7 @@ use webp::{Encoder, WebPConfig};
 
 /// Converts all PNG images in the input directory to WebP format in the output directory.
 #[tauri::command]
-pub fn convert_images(input_dir: String, output_dir: String, input_file_type: String) -> Result<(), String> {
+pub fn convert_images(input_dir: String, output_dir: String, input_file_type: String, output_file_type: String) -> Result<(), String> {
     let input_path = Path::new(&input_dir);
     let output_path = Path::new(&output_dir);
 
@@ -23,18 +23,22 @@ pub fn convert_images(input_dir: String, output_dir: String, input_file_type: St
         let entry = entry.map_err(|e| e.to_string())?;
         let path = entry.path();
         
-        // Process only .png files
+        // Process only 'input file types' in the input directory
         if path.extension().and_then(|ext| ext.to_str()) == Some(input_file_type.as_str()) {
             let file_stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("converted");
             let output_file_path = output_path.join(format!("{}.webp", file_stem));
 
-            match convert_image_to_webp(&path, &output_file_path) {
-                Ok(_) => println!("Converted: {:?}", path),
-                Err(e) => println!("Failed to convert {:?}: {}", path, e),
+            match output_file_type.as_str() {
+                "png" => match convert_image_to_webp(&path, &output_file_path) {
+                    Ok(_) => println!("Converted: {:?}", path),
+                    Err(e) => println!("Failed to convert {:?}: {}", path, e),
+                },
+                _ => {
+                    println!("Unsupported file type: {:?}", path);
+                }
             }
         }
     }
-
     Ok(())
 }
 
