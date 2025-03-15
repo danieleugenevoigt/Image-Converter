@@ -2,7 +2,8 @@ use std::fs;
 use std::fs::File;
 use std::io::{BufWriter, Write};  // Corrected import syntax
 use std::path::Path;
-use image::{ImageFormat, ImageReader, GenericImageView};
+use image::{ImageFormat, ImageReader, DynamicImage, GenericImageView};
+use image::codecs::tiff::TiffEncoder;
 use webp::{Encoder, WebPConfig};
 
 /// Converts all PNG images in the input directory to WebP format in the output directory.
@@ -48,34 +49,36 @@ pub fn convert_images(input_dir: String, output_dir: String, input_file_type: St
 }
 
 /// Converts a single image file to WebP format.
-fn convert_image_to_webp(
-    input_path: &std::path::Path, output_path: &std::path::Path) -> Result<(), String> {
-
+fn convert_image_to_webp(input_path: &Path, output_path: &Path) -> Result<(), String> {
     // Open and decode the image file
     let img = ImageReader::open(input_path)
-        .map_err(|e| e.to_string())?
+        .map_err(|e| format!("Failed to open image {}: {}", input_path.display(), e))?
         .decode()
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| format!("Failed to decode image {}: {}", input_path.display(), e))?;
 
-    // Convert the image to raw RGBA8 data
+    // Ensure the image is in RGBA format
+    let img = img.to_rgba8(); // This guarantees a consistent type (ImageBuffer<Rgba<u8>>)
+
     let (width, height) = img.dimensions();
-    let img = img.to_rgba8();
 
     // Encode to WebP with a quality setting (0.0 = lowest, 100.0 = highest)
     let quality = 75.0;
     let encoder = Encoder::from_rgba(&img, width, height);
-    let webp_data = encoder.encode(quality);  // Returns WebPMemory (Vec<u8>)
+    let webp_data = encoder.encode(quality); // Returns WebPMemory (Vec<u8>)
 
-    // Create the output file and write the encoded WebP data
-    let output_file = File::create(output_path).map_err(|e| e.to_string())?;
+    // Write the WebP file
+    let output_file = File::create(output_path)
+        .map_err(|e| format!("Failed to create output file {}: {}", output_path.display(), e))?;
     let mut writer = BufWriter::new(output_file);
     
-    // Write the webp_data to the file
-    writer.write(&webp_data).map_err(|e| e.to_string())?;
+    writer.write_all(&webp_data)
+        .map_err(|e| format!("Failed to write WebP data to {}: {}", output_path.display(), e))?;
 
     log::info!("Converted {:?} to {:?}", input_path, output_path);
     Ok(())
 }
+
+
 
 /// Converts a single image file to JPEG format.
 fn convert_image_to_jpeg(input_path: &Path, output_path: &Path, quality: u8) -> Result<(), String> {
@@ -92,6 +95,28 @@ fn convert_image_to_jpeg(input_path: &Path, output_path: &Path, quality: u8) -> 
     // Use JPEG encoder with quality setting
     let mut encoder = image::codecs::jpeg::JpegEncoder::new_with_quality(writer, quality);
     encoder.encode_image(&img).map_err(|e| e.to_string())?;
+
+    log::info!("Converted {:?} to {:?}", input_path, output_path);
+    Ok(())
+}
+
+/// Converts an image to TIFF format.
+fn convert_image_to_tiff(input_path: &Path, output_path: &Path) -> Result<(), String> {
+    // Open and decode the image file
+    let img = image::open(input_path).map_err(|e| e.to_string())?;
+
+    // Convert to RGBA8 for best quality and transparency support
+    let img = img.to_rgba8();
+
+    // Create output file
+    let output_file = File::create(output_path).map_err(|e| e.to_string())?;
+    let mut writer = BufWriter::new(output_file);
+
+    // Use TIFF encoder (with default compression)
+    let encoder = TiffEncoder::new(&mut writer);
+    encoder
+        .encode(&img, img.width(), img.height(), image::ColorType::Rgba8.into()) // Convert to ExtendedColorType
+        .map_err(|e| e.to_string())?;
 
     log::info!("Converted {:?} to {:?}", input_path, output_path);
     Ok(())

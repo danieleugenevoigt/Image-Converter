@@ -63,8 +63,8 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>Image Converter Pro</h1>
-
+      <h1>BICU</h1>
+      <h2>Batch Image Converter Utility</h2>
       <div className="path-container">
         <div className="path-input">
           <label>Source Folder:</label>
@@ -98,7 +98,7 @@ function App() {
             <option value="webp">webp</option>
             <option value="jpeg">jpeg</option>
             <option value="png">png</option>
-            <option value="tiff"> stiff</option>
+            <option value="tiff">tiff</option>
           </select>
         </div>
       </div>
