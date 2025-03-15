@@ -11,6 +11,7 @@ function App() {
   const [message, setMessage] = useState("");
   const [fromFileType, setFromFileType] = useState("png");
   const [toFileType, setToFileType] = useState("webp");
+  const [quality, setQuality] = useState(90);
 
   const handleBrowseSource = async () => {
     try {
@@ -83,10 +84,9 @@ function App() {
         <div className="from-file-types">
           <label>From File Types:</label>
           <select value={fromFileType} onChange={(e) => setFromFileType(e.target.value)}>
+            <option value="*">Any</option>
             <option value="png">png</option>
-            <option value="jpg">jpg</option>
             <option value="jpeg">jpeg</option>
-            <option value="gif">gif</option>
             <option value="bmp">bmp</option>
             <option value="tiff">tiff</option>
             <option value="webp">webp</option>
@@ -101,6 +101,16 @@ function App() {
             <option value="tiff">tiff</option>
           </select>
         </div>
+        <div className="file-quality">
+          <label>Quality:</label>
+          <input 
+            type="number" 
+            min="1" 
+            max="100" 
+            value={quality} 
+            onChange={(e) => setQuality(e.target.value)} // Update the state variable
+          />
+        </div>  
       </div>
 
       <button className="convert-button" onClick={handleConvertImages} disabled={isConverting}>
