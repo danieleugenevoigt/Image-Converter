@@ -41,11 +41,15 @@ pub fn convert_images(
 
             match output_file_type.as_str() {
                 "png" => match convert_image_to_webp(&path, &output_file_path, quality) {
-                    Ok(_) => println!("Converted: {:?}", path),
+                    Ok(_) => println!("Converted to png: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
                 "jpeg" => match convert_image_to_jpeg(&path, &output_file_path, quality as u8) {
                     Ok(_) => println!("Converted to jpeg: {:?}", path),
+                    Err(e) => println!("Failed to convert {:?}: {}", path, e),
+                },
+                "tiff" => match convert_image_to_tiff(&path, &output_file_path, quality as u8) {
+                    Ok(_) => println!("Converted to tiff: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
                 _ => {
