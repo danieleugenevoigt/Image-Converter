@@ -3,12 +3,21 @@ use std::fs::File;
 use std::io::{BufWriter, Write};  // Corrected import syntax
 use std::path::Path;
 use image::{ImageFormat, ImageReader, DynamicImage, GenericImageView};
-use image::codecs::tiff::TiffEncoder;
 use webp::{Encoder, WebPConfig};
+use tiff::encoder::{TiffEncoder, colortype::RGBA8};
+use tiff::tags::CompressionMethod;
+use tiff::TiffError;
+
+
 
 /// Converts all PNG images in the input directory to WebP format in the output directory.
 #[tauri::command]
-pub fn convert_images(input_dir: String, output_dir: String, input_file_type: String, output_file_type: String) -> Result<(), String> {
+pub fn convert_images(
+    input_dir: String, 
+    output_dir: String, 
+    input_file_type: String, 
+    output_file_type: String,
+    quality: f32) -> Result<(), String> {
     let input_path = Path::new(&input_dir);
     let output_path = Path::new(&output_dir);
 
@@ -31,11 +40,11 @@ pub fn convert_images(input_dir: String, output_dir: String, input_file_type: St
 
 
             match output_file_type.as_str() {
-                "png" => match convert_image_to_webp(&path, &output_file_path) {
+                "png" => match convert_image_to_webp(&path, &output_file_path, quality) {
                     Ok(_) => println!("Converted: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
-                "jpeg" => match convert_image_to_jpeg(&path, &output_file_path, 75) {
+                "jpeg" => match convert_image_to_jpeg(&path, &output_file_path, quality as u8) {
                     Ok(_) => println!("Converted to jpeg: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
@@ -49,7 +58,7 @@ pub fn convert_images(input_dir: String, output_dir: String, input_file_type: St
 }
 
 /// Converts a single image file to WebP format.
-fn convert_image_to_webp(input_path: &Path, output_path: &Path) -> Result<(), String> {
+fn convert_image_to_webp(input_path: &Path, output_path: &Path, quality: f32) -> Result<(), String> {
     // Open and decode the image file
     let img = ImageReader::open(input_path)
         .map_err(|e| format!("Failed to open image {}: {}", input_path.display(), e))?
@@ -60,9 +69,8 @@ fn convert_image_to_webp(input_path: &Path, output_path: &Path) -> Result<(), St
     let img = img.to_rgba8(); // This guarantees a consistent type (ImageBuffer<Rgba<u8>>)
 
     let (width, height) = img.dimensions();
-
+ 
     // Encode to WebP with a quality setting (0.0 = lowest, 100.0 = highest)
-    let quality = 75.0;
     let encoder = Encoder::from_rgba(&img, width, height);
     let webp_data = encoder.encode(quality); // Returns WebPMemory (Vec<u8>)
 
@@ -101,7 +109,7 @@ fn convert_image_to_jpeg(input_path: &Path, output_path: &Path, quality: u8) -> 
 }
 
 /// Converts an image to TIFF format.
-fn convert_image_to_tiff(input_path: &Path, output_path: &Path) -> Result<(), String> {
+fn convert_image_to_tiff(input_path: &Path, output_path: &Path, quality: u8) -> Result<(), String> {
     // Open and decode the image file
     let img = image::open(input_path).map_err(|e| e.to_string())?;
 
@@ -112,11 +120,15 @@ fn convert_image_to_tiff(input_path: &Path, output_path: &Path) -> Result<(), St
     let output_file = File::create(output_path).map_err(|e| e.to_string())?;
     let mut writer = BufWriter::new(output_file);
 
-    // Use TIFF encoder (with default compression)
-    let encoder = TiffEncoder::new(&mut writer);
-    encoder
-        .encode(&img, img.width(), img.height(), image::ColorType::Rgba8.into()) // Convert to ExtendedColorType
-        .map_err(|e| e.to_string())?;
+    // Use TIFF encoder with compression based on quality
+    let compression = match quality {
+        0..=33 => CompressionMethod::LZW,
+        34..=66 => CompressionMethod::PackBits,
+        _ => CompressionMethod::Deflate,
+    };
+
+    let mut encoder = TiffEncoder::new(&mut writer).map_err(|e: TiffError| e.to_string())?;
+    encoder.write_image::<RGBA8>(img.width(), img.height(), &img).map_err(|e| e.to_string())?;
 
     log::info!("Converted {:?} to {:?}", input_path, output_path);
     Ok(())

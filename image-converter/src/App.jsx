@@ -52,7 +52,9 @@ function App() {
         inputDir: sourcePath, 
         outputDir: destinationPath, 
         inputFileType: fromFileType, 
-        outputFileType: toFileType });
+        outputFileType: toFileType,
+        quality: quality});
+
       setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
