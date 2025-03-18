@@ -1,9 +1,9 @@
 use std::fs;
 use std::fs::File;
-use std::io::{BufWriter, Write};  // Corrected import syntax
+use std::io::{BufWriter, Write};
 use std::path::Path;
-use image::{ImageFormat, ImageReader, DynamicImage, GenericImageView};
-use webp::{Encoder, WebPConfig};
+use image::{ImageReader, GenericImageView};
+use webp::{Encoder};
 use tiff::encoder::{TiffEncoder, colortype::RGBA8};
 use tiff::tags::CompressionMethod;
 use tiff::TiffError;
@@ -40,7 +40,7 @@ pub fn convert_images(
 
 
             match output_file_type.as_str() {
-                "png" => match convert_image_to_webp(&path, &output_file_path, quality) {
+                "webp" => match convert_image_to_webp(&path, &output_file_path, quality) {
                     Ok(_) => println!("Converted to png: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
@@ -48,8 +48,8 @@ pub fn convert_images(
                     Ok(_) => println!("Converted to jpeg: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
-                "tiff" => match convert_image_to_tiff(&path, &output_file_path, quality as u8) {
-                    Ok(_) => println!("Converted to tiff: {:?}", path),
+                "tiff" | "tif" => match convert_image_to_tiff(&path, &output_file_path, quality as u8) {
+                    Ok(_) => println!("Converted to tif: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
                 _ => {
@@ -124,16 +124,28 @@ fn convert_image_to_tiff(input_path: &Path, output_path: &Path, quality: u8) -> 
     let output_file = File::create(output_path).map_err(|e| e.to_string())?;
     let mut writer = BufWriter::new(output_file);
 
-    // Use TIFF encoder with compression based on quality
-    let compression = match quality {
-        0..=33 => CompressionMethod::LZW,
-        34..=66 => CompressionMethod::PackBits,
-        _ => CompressionMethod::Deflate,
+    // Set compression method based on quality
+    let compression = if quality < 25 {
+        CompressionMethod::Deflate // Maximum compression
+    } else if quality < 50 {
+        CompressionMethod::LZW // Good compression, lossless
+    } else if quality < 75 {
+        CompressionMethod::PackBits // Medium compression
+    } else {
+        CompressionMethod::None // No compression, highest quality
     };
 
+    // Create TIFF encoder
     let mut encoder = TiffEncoder::new(&mut writer).map_err(|e: TiffError| e.to_string())?;
-    encoder.write_image::<RGBA8>(img.width(), img.height(), &img).map_err(|e| e.to_string())?;
+    
+    // Create image encoder with dimensions and write data
+    let image_encoder = encoder.new_image::<RGBA8>(img.width(), img.height())
+        .map_err(|e| e.to_string())?;
+    
+    // Write the image data
+    image_encoder.write_data(&img)
+        .map_err(|e| e.to_string())?;
 
-    log::info!("Converted {:?} to {:?}", input_path, output_path);
+    log::info!("Converted {:?} to {:?} with compression {:?}", input_path, output_path, compression);
     Ok(())
 }

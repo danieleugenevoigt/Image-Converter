@@ -90,7 +90,7 @@ function App() {
             <option value="png">png</option>
             <option value="jpeg">jpeg</option>
             <option value="bmp">bmp</option>
-            <option value="tiff">tiff</option>
+            <option value="tif">tif</option>
             <option value="webp">webp</option>
           </select>
         </div>
@@ -100,18 +100,17 @@ function App() {
             <option value="webp">webp</option>
             <option value="jpeg">jpeg</option>
             <option value="png">png</option>
-            <option value="tiff">tiff</option>
+            <option value="tif">tif</option>
           </select>
         </div>
         <div className="file-quality">
           <label>Quality:</label>
           <input 
-            type="number" 
+            type="number"
             min="1" 
             max="100" 
             value={quality} 
-            onChange={(e) => setQuality(e.target.value)} // Update the state variable
-          />
+            onChange={(e) => setQuality(Number(e.target.value))}          />
         </div>  
       </div>
 
