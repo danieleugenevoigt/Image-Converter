@@ -1,12 +1,11 @@
 use std::fs;
+use std::path::Path;
 use std::fs::File;
 use std::io::{BufWriter, Write};
-use std::path::Path;
 use image::{ImageReader, GenericImageView};
 use webp::{Encoder};
-use tiff::encoder::{TiffEncoder, colortype::RGBA8};
-use tiff::tags::CompressionMethod;
-use tiff::TiffError;
+use magick_rust::{MagickWand, CompressionType};
+
 
 
 
@@ -114,38 +113,45 @@ fn convert_image_to_jpeg(input_path: &Path, output_path: &Path, quality: u8) -> 
 
 /// Converts an image to TIFF format.
 fn convert_image_to_tiff(input_path: &Path, output_path: &Path, quality: u8) -> Result<(), String> {
-    // Open and decode the image file
-    let img = image::open(input_path).map_err(|e| e.to_string())?;
+    
+    magick_rust::magick_wand_genesis();
 
-    // Convert to RGBA8 for best quality and transparency support
-    let img = img.to_rgba8();
+    // Create a new MagickWand instance
+    let mut wand = MagickWand::new();
 
-    // Create output file
-    let output_file = File::create(output_path).map_err(|e| e.to_string())?;
-    let mut writer = BufWriter::new(output_file);
+    // Read the input image
+    wand.read_image(input_path.to_str().ok_or("Invalid input path")?)
+        .map_err(|e| e.to_string())?;
+
+    // Set image format to TIFF
+    wand.set_image_format("tiff").map_err(|e| e.to_string())?;
 
     // Set compression method based on quality
-    let compression = if quality < 25 {
-        CompressionMethod::Deflate // Maximum compression
-    } else if quality < 50 {
-        CompressionMethod::LZW // Good compression, lossless
-    } else if quality < 75 {
-        CompressionMethod::PackBits // Medium compression
-    } else {
-        CompressionMethod::None // No compression, highest quality
+    let compression = match quality {
+        0..=25 => CompressionType::Zip,     // Maximum compression (Deflate)
+        26..=50 => CompressionType::LZW,    // Good compression, lossless
+        51..=75 => CompressionType::RLE,    // Medium compression (Run-Length Encoding)
+        _ => CompressionType::RLE
+
+        // No compression, highest quality
     };
 
-    // Create TIFF encoder
-    let mut encoder = TiffEncoder::new(&mut writer).map_err(|e: TiffError| e.to_string())?;
-    
-    // Create image encoder with dimensions and write data
-    let image_encoder = encoder.new_image::<RGBA8>(img.width(), img.height())
-        .map_err(|e| e.to_string())?;
-    
-    // Write the image data
-    image_encoder.write_data(&img)
+    wand.set_compression(compression).map_err(|e| e.to_string())?;
+
+    // Set compression quality (0-100 scale)
+    wand.set_compression_quality(quality.into()).map_err(|e| e.to_string())?;
+
+    // Write the output image
+    wand.write_image(output_path.to_str().ok_or("Invalid output path")?)
         .map_err(|e| e.to_string())?;
 
-    log::info!("Converted {:?} to {:?} with compression {:?}", input_path, output_path, compression);
+    log::info!(
+        "Converted {:?} to {:?} with compression {:?} at quality {}",
+        input_path,
+        output_path,
+        compression,
+        quality
+    );
+
     Ok(())
 }
