@@ -111,6 +111,29 @@ fn convert_image_to_jpeg(input_path: &Path, output_path: &Path, quality: u8) -> 
     Ok(())
 }
 
+// Converts an image to PNG format.
+fn convert_image_to_png(input_path: &Path, output_path: &Path) -> Result<(), String> {
+    // Open and decode the image file
+    let img = ImageReader::open(input_path)
+        .map_err(|e| format!("Failed to open image {}: {}", input_path.display(), e))?
+        .decode()
+        .map_err(|e| format!("Failed to decode image {}: {}", input_path.display(), e))?;
+
+    // Create the output file
+    let output_file = File::create(output_path).map_err(|e| format!("Failed to create output file {}: {}", output_path.display(), e))?;
+    let writer = BufWriter::new(output_file);
+
+    // Use PNG encoder
+    let mut encoder = png::Encoder::new(writer, img.width(), img.height());
+    encoder.set_filter(png::FilterType::NoFilter);
+
+    let mut png_writer = encoder.write_header().map_err(|e| format!("Failed to write PNG header: {}", e))?;
+    png_writer.write_image_data(&img.to_rgba8()).map_err(|e| format!("Failed to write PNG data: {}", e))?;
+
+    log::info!("Converted {:?} to {:?}", input_path, output_path);
+    Ok(())
+}
+
 /// Converts an image to TIFF format.
 fn convert_image_to_tiff(input_path: &Path, output_path: &Path, quality: u8) -> Result<(), String> {
     
