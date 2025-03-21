@@ -131,7 +131,7 @@ fn convert_image_to_tiff(input_path: &Path, output_path: &Path, quality: u8) -> 
         0..=25 => CompressionType::Zip,     // Maximum compression (Deflate)
         26..=50 => CompressionType::LZW,    // Good compression, lossless
         51..=75 => CompressionType::RLE,    // Medium compression (Run-Length Encoding)
-        _ => CompressionType::RLE
+        _ => CompressionType::Undefined,
 
         // No compression, highest quality
     };
