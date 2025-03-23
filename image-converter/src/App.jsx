@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
-
+import InformationViewer from "./InformationViewer/InformationViewer.jsx";
 import "./App.css";
+
 
 function App() {
   const [sourcePath, setSourcePath] = useState("");
@@ -87,11 +88,10 @@ function App() {
           <label>From File Types:</label>
           <select value={fromFileType} onChange={(e) => setFromFileType(e.target.value)}>
             <option value="*">Any</option>
-            <option value="png">png</option>
-            <option value="jpeg">jpeg</option>
-            <option value="bmp">bmp</option>
-            <option value="tif">tif</option>
             <option value="webp">webp</option>
+            <option value="jpeg">jpeg</option>
+            <option value="png">png</option>
+            <option value="tif">tif</option>
           </select>
         </div>
         <div className="to-file-types">
@@ -113,7 +113,7 @@ function App() {
             onChange={(e) => setQuality(Number(e.target.value))}          />
         </div>  
       </div>
-
+      <div><InformationViewer /></div>
       <button className="convert-button" onClick={handleConvertImages} disabled={isConverting}>
         {isConverting ? "Converting..." : "handle Convert Images"}
       </button>

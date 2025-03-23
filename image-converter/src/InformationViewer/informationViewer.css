@@ -1,0 +1,14 @@
+.information-viewer {
+    background-color: #2be95d;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: top;
+    gap: 20px;
+    text-align: center;
+    max-height: 10vh;
+    max-width: 50vw;
+    margin: auto;
+  }
