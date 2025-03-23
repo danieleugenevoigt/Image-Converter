@@ -13,7 +13,7 @@ function App() {
   const [fromFileType, setFromFileType] = useState("png");
   const [toFileType, setToFileType] = useState("webp");
   const [fileCount, setFileCount] = useState(0);
-
+  const [totalTime, setTotalTime] = useState(0);
   const [quality, setQuality] = useState(90);
 
   const handleBrowseSource = async () => {
@@ -43,6 +43,7 @@ function App() {
     }
 
     setFileCount(0);
+    setTotalTime(0);
     setIsConverting(true);
     setMessage("Converting images...");
     console.log("Converting images with the following parameters:");
@@ -50,17 +51,21 @@ function App() {
     console.log("Destination Path:", destinationPath);
     console.log("From File Type:", fromFileType);
     console.log("To File Type:", toFileType);
-
+  
     try {
-      const count = await invoke("convert_images", { 
+      const data = await invoke("convert_images", { 
         inputDir: sourcePath, 
         outputDir: destinationPath, 
         inputFileType: fromFileType, 
         outputFileType: toFileType,
-        quality: quality});
+        quality: quality,
+       });
+       
+       console.log("Conversion result:", data); // Add this line to inspect the data object
 
-      setFileCount(count);
-      setMessage("Conversion completed successfully!");
+
+      setFileCount(data[0]);
+      setTotalTime(data[1].toFixed(3));      setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
       setMessage("Error during conversion. Check the console for details.");
@@ -117,7 +122,7 @@ function App() {
             onChange={(e) => setQuality(Number(e.target.value))}          />
         </div>  
       </div>
-      <div><InformationViewer fileCount={fileCount}/></div>
+      <div><InformationViewer fileCount={fileCount} totalTime={ totalTime} /></div>
       <button className="convert-button" onClick={handleConvertImages} disabled={isConverting}>
         {isConverting ? "Converting..." : "handle Convert Images"}
       </button>

@@ -1,6 +1,7 @@
 use std::fs;
 use std::path::Path;
 use std::fs::File;
+use std::time::Instant;
 use std::io::{BufWriter, Write};
 use image::{ImageReader, GenericImageView};
 use webp::{Encoder};
@@ -16,7 +17,7 @@ pub fn convert_images(
     output_dir: String, 
     input_file_type: String, 
     output_file_type: String,
-    quality: f32) -> Result<usize, String> {
+    quality: f32) -> Result<(usize, f64), String> {
     let input_path = Path::new(&input_dir);
     let output_path = Path::new(&output_dir);
     
@@ -28,6 +29,7 @@ pub fn convert_images(
     // Read all files in the input directory
     let entries = fs::read_dir(input_path).map_err(|e| e.to_string())?;
     let mut file_count = 0;
+    let start_time = Instant::now();
 
     for entry in entries {
         let entry = entry.map_err(|e| e.to_string())?;
@@ -64,7 +66,9 @@ pub fn convert_images(
             }
         }
     }
-    Ok(file_count)
+    let total_time = start_time.elapsed().as_millis() as f64 /1000.0;
+    println!("Conversion completed in {:?}", total_time);
+    Ok((file_count, total_time))
 }
 
 /// Converts a single image file to WebP format.

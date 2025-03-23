@@ -1,3 +1,6 @@
+.data {
+    color: greenyellow;
+}
 .information-viewer {
     background-color: #515652;
     padding: .5rem;
