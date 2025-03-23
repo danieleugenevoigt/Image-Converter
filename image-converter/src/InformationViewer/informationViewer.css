@@ -1,14 +1,27 @@
 .information-viewer {
-    background-color: #2be95d;
-    padding: 20px;
-    border-radius: 8px;
+    background-color: #515652;
+    padding: .5rem;
+    border-radius: 5px;
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: top;
     justify-content: top;
-    gap: 20px;
-    text-align: center;
-    max-height: 10vh;
-    max-width: 50vw;
+    text-align: left;
+    max-height: 20vh;
+    max-width: 80vw;
     margin: auto;
+  }
+
+  .information-viewer h2 {
+    font-size: 1rem;
+    color: #ffffff;
+    padding: 0rem;
+  }
+
+  .information-viewer p {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: #ffffff;
+    padding: 0rem;
+
   }

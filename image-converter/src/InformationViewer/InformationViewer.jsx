@@ -1,11 +1,11 @@
 import React from 'react'
-import './informationViewer.css'
+import "./informationViewer.css"
 
-const InformationViewer = () => {
+const InformationViewer = ({ fileCount }) => {
   return (
-    <div classname='information-viewer'>
-      <h2>Information Viewer</h2>
-      <p>This is the information viewer component.</p>
+    <div className='information-viewer'>
+      <h2>Image Conversion Statistics</h2>
+      <p>Total files converted: {fileCount}</p>
     </div>
   )
 }

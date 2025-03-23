@@ -12,6 +12,8 @@ function App() {
   const [message, setMessage] = useState("");
   const [fromFileType, setFromFileType] = useState("png");
   const [toFileType, setToFileType] = useState("webp");
+  const [fileCount, setFileCount] = useState(0);
+
   const [quality, setQuality] = useState(90);
 
   const handleBrowseSource = async () => {
@@ -40,6 +42,7 @@ function App() {
       return;
     }
 
+    setFileCount(0);
     setIsConverting(true);
     setMessage("Converting images...");
     console.log("Converting images with the following parameters:");
@@ -49,13 +52,14 @@ function App() {
     console.log("To File Type:", toFileType);
 
     try {
-      await invoke("convert_images", { 
+      const count = await invoke("convert_images", { 
         inputDir: sourcePath, 
         outputDir: destinationPath, 
         inputFileType: fromFileType, 
         outputFileType: toFileType,
         quality: quality});
 
+      setFileCount(count);
       setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
@@ -113,7 +117,7 @@ function App() {
             onChange={(e) => setQuality(Number(e.target.value))}          />
         </div>  
       </div>
-      <div><InformationViewer /></div>
+      <div><InformationViewer fileCount={fileCount}/></div>
       <button className="convert-button" onClick={handleConvertImages} disabled={isConverting}>
         {isConverting ? "Converting..." : "handle Convert Images"}
       </button>

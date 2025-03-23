@@ -16,10 +16,10 @@ pub fn convert_images(
     output_dir: String, 
     input_file_type: String, 
     output_file_type: String,
-    quality: f32) -> Result<(), String> {
+    quality: f32) -> Result<usize, String> {
     let input_path = Path::new(&input_dir);
     let output_path = Path::new(&output_dir);
-
+    
     // Ensure output directory exists
     if !output_path.exists() {
         fs::create_dir_all(output_path).map_err(|e| e.to_string())?;
@@ -27,17 +27,20 @@ pub fn convert_images(
 
     // Read all files in the input directory
     let entries = fs::read_dir(input_path).map_err(|e| e.to_string())?;
+    let mut file_count = 0;
 
     for entry in entries {
         let entry = entry.map_err(|e| e.to_string())?;
         let path = entry.path();
         
+
         // Process only 'input file types' in the input directory
         if path.extension().and_then(|ext| ext.to_str()) == Some(input_file_type.as_str()) {
             let file_stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("converted");
             let output_file_path = output_path.join(format!("{}.{}", file_stem, output_file_type));
+            file_count += 1;
 
-
+            // Convert the image based on the output file type
             match output_file_type.as_str() {
                 "webp" => match convert_image_to_webp(&path, &output_file_path, quality) {
                     Ok(_) => println!("Converted to png: {:?}", path),
@@ -45,6 +48,10 @@ pub fn convert_images(
                 },
                 "jpeg" => match convert_image_to_jpeg(&path, &output_file_path, quality as u8) {
                     Ok(_) => println!("Converted to jpeg: {:?}", path),
+                    Err(e) => println!("Failed to convert {:?}: {}", path, e),
+                },
+                "png" => match convert_image_to_png(&path, &output_file_path) {
+                    Ok(_) => println!("Converted to png: {:?}", path),
                     Err(e) => println!("Failed to convert {:?}: {}", path, e),
                 },
                 "tiff" | "tif" => match convert_image_to_tiff(&path, &output_file_path, quality as u8) {
@@ -57,7 +64,7 @@ pub fn convert_images(
             }
         }
     }
-    Ok(())
+    Ok(file_count)
 }
 
 /// Converts a single image file to WebP format.
