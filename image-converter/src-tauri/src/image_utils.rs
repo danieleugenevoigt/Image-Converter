@@ -37,7 +37,7 @@ pub fn convert_images(
         
 
         // Process only 'input file types' in the input directory
-        if path.extension().and_then(|ext| ext.to_str()) == Some(input_file_type.as_str()) {
+        if input_file_type == "*" || path.extension().and_then(|ext| ext.to_str()) == Some(input_file_type.as_str()) {
             let file_stem = path.file_stem().and_then(|s| s.to_str()).unwrap_or("converted");
             let output_file_path = output_path.join(format!("{}.{}", file_stem, output_file_type));
             file_count += 1;
