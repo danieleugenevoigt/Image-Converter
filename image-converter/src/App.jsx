@@ -124,7 +124,7 @@ function App() {
       </div>
       <div><InformationViewer fileCount={fileCount} totalTime={ totalTime} /></div>
       <button className="convert-button" onClick={handleConvertImages} disabled={isConverting}>
-        {isConverting ? "Converting..." : "handle Convert Images"}
+        {isConverting ? "Converting..." : "Convert Images"}
       </button>
 
       {message && <p className="status-message">{message}</p>}
