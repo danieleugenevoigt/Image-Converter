@@ -66,9 +66,10 @@
 }
 
 .path-input {
-  display: flex;
   align-items: center;
-  gap: 10px;
+  display: flex;
+
+  width: 50vw;;
 }
 
 input {
@@ -76,6 +77,8 @@ input {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 button {
