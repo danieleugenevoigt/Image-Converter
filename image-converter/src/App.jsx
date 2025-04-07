@@ -16,7 +16,7 @@ function App() {
   const [fileCount, setFileCount] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [quality, setQuality] = useState(90);
-  const [favorites, setFavorites] = useState([]);
+  const [sourceFavorites, setSourceFavorites] = useState([]);
  
   let store = useRef(null);
 
@@ -29,7 +29,7 @@ function App() {
       await initStore();
       const stored = await store.get("favorites");
       if (stored && Array.isArray(stored)) {
-        setFavorites(stored);
+        setSourceFavorites(stored);
         console.log("Loaded from Tauri store:", stored);
       }
     }
@@ -39,18 +39,18 @@ function App() {
   
 
   useEffect(() => {
-    async function saveFavorites() {
-      console.log("Saving favorites to store:", favorites);
+    async function saveFavoritesSource() {
+      console.log("Saving source favorites to store:", setSourceFavorites);
       await initStore();
-      await store.set("favorites", favorites);
+      await store.set("favorites", sourceFavorites);
       await store.save(); // Required to persist to disk
-      console.log("Saved to Tauri store:", favorites);
+      console.log("Saved to Tauri store:", sourceFavorites);
     }
   
-    if (favorites.length) {
-      saveFavorites();
+    if (sourceFavorites.length) {
+      saveFavoritesSource();
     }
-  }, [favorites]);
+  }, [sourceFavorites]);
   
 
   const handleBrowseSource = async () => {
@@ -63,19 +63,16 @@ function App() {
     }
   };
 
-  const handleAddToFavorites = async () => {
-    if (sourcePath && !favorites.includes(sourcePath)) {
-      setFavorites([...favorites, sourcePath]);
-      // await initStore();
-      // await store.set("favorites", favorites);
-      // await store.save(); // Required to persist to disk
+  const handleAddToFavoritesSource = async () => {
+    if (sourcePath && !sourceFavorites.includes(sourcePath)) {
+      setSourceFavorites([...sourceFavorites, sourcePath]);
       setMessage("Added to favorites!");
     } else {
       setMessage("Path is already in favorites or empty.");
     }
   };
 
-  const handleSelectFavorite = (favorite) => {
+  const handleSelectFavoriteSource = (favorite) => {
     setSourcePath(favorite);
   };
 
@@ -138,16 +135,16 @@ function App() {
             placeholder="Select source folder"
           />
           <button onClick={handleBrowseSource}>Browse</button>
-          <button onClick={handleAddToFavorites}>Add to Favorites</button>
+          <button onClick={handleAddToFavoritesSource}>Add to Favorites</button>
           
           <div className="favorites-container">
           <label>Favorites:</label>
           <select
-            onChange={(e) => handleSelectFavorite(e.target.value)}
+            onChange={(e) => handleSelectFavoriteSource(e.target.value)}
             value={sourcePath}
           >
             <option value="">Select a favorite</option>
-            {favorites.map((favorite, index) => (
+            {sourceFavorites.map((favorite, index) => (
               <option key={index} value={favorite}>
                 {favorite}
               </option>
@@ -155,8 +152,6 @@ function App() {
           </select>
         </div>
   
-        
-
         <div className="path-input">
           <label>Destination Folder:</label>
           <input
