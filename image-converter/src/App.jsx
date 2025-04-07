@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import InformationViewer from "./InformationViewer/InformationViewer.jsx";
+import { Store } from '@tauri-apps/plugin-store';
 import "./App.css";
 
 
@@ -16,21 +17,41 @@ function App() {
   const [totalTime, setTotalTime] = useState(0);
   const [quality, setQuality] = useState(90);
   const [favorites, setFavorites] = useState([]);
+ 
+  let store = useRef(null);
 
-  // Load favorites from localStorage when the app loads
+  async function initStore() {
+    store = await Store.load(".settings.dat");
+}
+
   useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    console.log("Loaded from localStorage:", storedFavorites); // Debugging log
-
-    if (storedFavorites) {
-      setFavorites(JSON.parse(storedFavorites));
+    async function loadFavorites() {
+      await initStore();
+      const stored = await store.get("favorites");
+      if (stored && Array.isArray(stored)) {
+        setFavorites(stored);
+        console.log("Loaded from Tauri store:", stored);
+      }
     }
-  }, []);
+  
+    loadFavorites();
+  },[]);
+  
 
-  // Save favorites to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
+    async function saveFavorites() {
+      console.log("Saving favorites to store:", favorites);
+      await initStore();
+      await store.set("favorites", favorites);
+      await store.save(); // Required to persist to disk
+      console.log("Saved to Tauri store:", favorites);
+    }
+  
+    if (favorites.length) {
+      saveFavorites();
+    }
   }, [favorites]);
+  
 
   const handleBrowseSource = async () => {
     try {
@@ -42,9 +63,12 @@ function App() {
     }
   };
 
-  const handleAddToFavorites = () => {
+  const handleAddToFavorites = async () => {
     if (sourcePath && !favorites.includes(sourcePath)) {
       setFavorites([...favorites, sourcePath]);
+      // await initStore();
+      // await store.set("favorites", favorites);
+      // await store.save(); // Required to persist to disk
       setMessage("Added to favorites!");
     } else {
       setMessage("Path is already in favorites or empty.");

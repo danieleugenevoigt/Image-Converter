@@ -16,11 +16,23 @@
     },
     {
       "identifier": "dialog:allow-open",
-      "allow": [
-        {
-          "path": "/"
-        }
-      ]
-    }
+      "allow": []
+    },
+    {
+      "identifier": "store:allow-get"
+    },
+    {
+      "identifier": "store:allow-set"
+    },
+    {
+      "identifier": "store:allow-save"
+    },
+    {
+      "identifier": "store:allow-delete"
+    },
+    {
+      "identifier": "store:allow-clear"
+    },
+    "store:default"
   ]
 }

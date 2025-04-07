@@ -35,5 +35,6 @@
     ]
   },
   "plugins": {
+    "store": null
   }
 }
