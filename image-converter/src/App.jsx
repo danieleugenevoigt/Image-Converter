@@ -17,6 +17,8 @@ function App() {
   const [totalTime, setTotalTime] = useState(0);
   const [quality, setQuality] = useState(90);
   const [sourceFavorites, setSourceFavorites] = useState([]);
+  const [destinationFavorites, setDestinationFavorites] = useState([]);
+
  
   let store = useRef(null);
 
@@ -63,6 +65,9 @@ function App() {
     }
   };
 
+/// Function to add the current source path to favorites
+  // and save it to the Tauri store
+
   const handleAddToFavoritesSource = async () => {
     if (sourcePath && !sourceFavorites.includes(sourcePath)) {
       setSourceFavorites([...sourceFavorites, sourcePath]);
@@ -72,6 +77,8 @@ function App() {
     }
   };
 
+  // Function to handle selection of a favorite source path
+  // and set it as the current source path
   const handleSelectFavoriteSource = (favorite) => {
     setSourcePath(favorite);
   };
@@ -84,6 +91,24 @@ function App() {
     } catch (error) {
       console.error("Error selecting destination folder:", error);
     }
+  };
+
+  /// Function to add the current destination path to favorites
+  // and save it to the Tauri store
+
+  const handleAddToFavoritesDestination = async () => {
+    if (destinationPath && !destinationFavorites.includes(destinationPath)) {
+      setDestinationFavorites([...destinationFavorites, destinationPath]);
+      setMessage("Added to favorites!");
+    } else {
+      setMessage("Path is already in favorites or empty.");
+    }
+  };
+
+  // Function to handle selection of a favorite destination path
+  // and set it as the current destination path
+  const handleSelectFavoriteDestination = (favorite) => {
+    setDestinationPath(favorite);
   };
 
   const handleConvertImages = async () => {
@@ -134,38 +159,14 @@ function App() {
             readOnly
             placeholder="Select source folder"
           />
-          <button onClick={handleBrowseSource}>Browse</button>
-          <button onClick={handleAddToFavoritesSource}>Add to Favorites</button>
-          
-          <div className="favorites-container">
-          <label>Favorites:</label>
-          <select
-            onChange={(e) => handleSelectFavoriteSource(e.target.value)}
-            value={sourcePath}
-          >
-            <option value="">Select a favorite</option>
-            {sourceFavorites.map((favorite, index) => (
-              <option key={index} value={favorite}>
-                {favorite}
-              </option>
-            ))}
-          </select>
-        </div>
-  
-        <div className="path-input">
-          <label>Destination Folder:</label>
-          <input
-            type="text"
-            value={destinationPath}
-            readOnly
-            placeholder="Select destination folder"
-          />
-          <button onClick={handleBrowseDestination}>Browse</button>
-        </div>
-      </div>
+          <button onClick={handleBrowseSource} title="Browse">
+            <span className="material-icons">folder_open</span>
+          </button>
+          <button onClick={handleAddToFavoritesSource} title="Add To Favorites">
+            <span className="material-icons">favorite_border</span>
+          </button>
 
-      <div className="file-types">
-        <div className="from-file-types">
+          <div className="from-file-types">
           <label>From File Types:</label>
           <select
             value={fromFileType}
@@ -178,7 +179,39 @@ function App() {
             <option value="tif">tif</option>
           </select>
         </div>
-        <div className="to-file-types">
+        </div>
+
+        <div className="favorites">
+          <label>Favorites:</label>
+          <select
+            onChange={(e) => handleSelectFavoriteSource(e.target.value)}
+            value={sourcePath}
+          >
+            <option value="">Select a favorite</option>
+            {sourceFavorites.map((favorite, index) => (
+              <option key={index} value={favorite}>
+                {favorite}
+              </option>
+            ))}
+          </select>
+          </div>
+
+        <div className="path-output">
+          <label>Destination Folder:</label>
+          <input
+            type="text"
+            value={destinationPath}
+            readOnly
+            placeholder="Select destination folder"
+          />
+          <button onClick={handleBrowseDestination} title="Browse">
+            <span className="material-icons">folder_open</span>
+          </button>
+          <button onClick={handleAddToFavoritesDestination} title="Add To Favorites">
+            <span className="material-icons">favorite_border</span>
+          </button>
+
+          <div className="to-file-types">
           <label>To File Type:</label>
           <select
             value={toFileType}
@@ -190,6 +223,26 @@ function App() {
             <option value="tif">tif</option>
           </select>
         </div>
+      </div>
+
+      <div className="favorites">
+          <label>Favorites:</label>
+          <select
+            onChange={(e) => handleSelectFavoriteDestination(e.target.value)}
+            value={sourcePath}
+          >
+            <option value="">Select a favorite</option>
+            {sourceFavorites.map((favorite, index) => (
+              <option key={index} value={favorite}>
+                {favorite}
+              </option>
+            ))}
+          </select>
+        </div>
+
+      <div className="file-types">
+
+
         <div className="file-quality">
           <label>Quality:</label>
           <input

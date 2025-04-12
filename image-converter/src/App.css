@@ -1,3 +1,8 @@
+select {
+  width: 220px;
+  padding: 8px;
+  overscroll-behavior: contain;
+}
 .app-container {
   display: flex;
   flex-direction: column;
@@ -6,6 +11,16 @@
   text-align: center;
   max-width: 80vw;
   margin: auto;
+}
+
+.favorites {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.favorites label {
+  margin-bottom: 0px;
+  color: greenyellow;
 }
 
 .file-types {
@@ -55,8 +70,9 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   flex: 1;
-
 }
+
+
 
 .path-container {
   display: flex;
@@ -66,9 +82,16 @@
 }
 
 .path-input {
-  align-items: center;
+  align-items: self-start;
   display: flex;
+  flex-direction: row;
+  width: 50vw;;
+}
 
+.path-output {
+  align-items: self-start;
+  display: flex;
+  flex-direction: row;
   width: 50vw;;
 }
 
