@@ -151,109 +151,118 @@ function App() {
       <h1>BICU</h1>
       <h2>Batch Image Converter Utility</h2>
       <div className="path-container">
-        <div className="path-input">
-          <label>Source Folder:</label>
-          <input
-            type="text"
-            value={sourcePath}
-            readOnly
-            placeholder="Select source folder"
-          />
-          <button onClick={handleBrowseSource} title="Browse">
-            <span className="material-icons">folder_open</span>
-          </button>
-          <button onClick={handleAddToFavoritesSource} title="Add To Favorites">
-            <span className="material-icons">favorite_border</span>
-          </button>
+        <div className="from-container">
+          <div className="path-input">
+            <label>Source Folder:</label>
+            <input
+              title={sourcePath}
+              type="text"
+              value={sourcePath}
+              readOnly
+              placeholder="Select source folder"
+            />
+            <button onClick={handleBrowseSource} title="Browse">
+              <span className="material-icons">folder_open</span>
+            </button>
+            <button onClick={handleAddToFavoritesSource} title="Add To Favorites">
+              <span className="material-icons">favorite_border</span>
+            </button>
 
-          <div className="from-file-types">
-          <label>From File Types:</label>
-          <select
-            value={fromFileType}
-            onChange={(e) => setFromFileType(e.target.value)}
-          >
-            <option value="*">Any</option>
-            <option value="webp">webp</option>
-            <option value="jpeg">jpeg</option>
-            <option value="png">png</option>
-            <option value="tif">tif</option>
-          </select>
-        </div>
-        </div>
 
-        <div className="favorites">
-          <label>Favorites:</label>
-          <select
-            onChange={(e) => handleSelectFavoriteSource(e.target.value)}
-            value={sourcePath}
-          >
-            <option value="">Select a favorite</option>
-            {sourceFavorites.map((favorite, index) => (
-              <option key={index} value={favorite}>
-                {favorite}
-              </option>
-            ))}
-          </select>
           </div>
 
-        <div className="path-output">
-          <label>Destination Folder:</label>
-          <input
-            type="text"
-            value={destinationPath}
-            readOnly
-            placeholder="Select destination folder"
-          />
-          <button onClick={handleBrowseDestination} title="Browse">
-            <span className="material-icons">folder_open</span>
-          </button>
-          <button onClick={handleAddToFavoritesDestination} title="Add To Favorites">
-            <span className="material-icons">favorite_border</span>
-          </button>
+          <div className="favorites">
+            <label>Favorites:</label>
+            <select
+              onChange={(e) => handleSelectFavoriteSource(e.target.value)}
+              value={sourcePath}
+            >
+              <option value="">Select a favorite</option>
+              {sourceFavorites.map((favorite, index) => (
+                <option key={index} value={favorite}>
+                  {favorite}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="from-file-types">
+              <label>File Types:</label>
+              <select
+                value={fromFileType}
+                onChange={(e) => setFromFileType(e.target.value)}
+              >
+                <option value="*">Any</option>
+                <option value="webp">webp</option>
+                <option value="jpeg">jpeg</option>
+                <option value="png">png</option>
+                <option value="tif">tif</option>
+              </select>
+            </div>
+        </div>
+        <div className="to-container">
+          <div className="path-output">
+            <label>Destination Folder:</label>
+            <input
+              title={destinationPath}
+              type="text"
+              value={destinationPath}
+              readOnly
+              placeholder="Select destination folder"
+            />
+            <button onClick={handleBrowseDestination} title="Browse">
+              <span className="material-icons">folder_open</span>
+            </button>
+            <button onClick={handleAddToFavoritesDestination} title="Add To Favorites">
+              <span className="material-icons">favorite_border</span>
+            </button>
 
+
+          </div>
+
+          <div className="favorites">
+            <label>Favorites:</label>
+            <select
+              onChange={(e) => handleSelectFavoriteDestination(e.target.value)}
+              value={sourcePath}
+            >
+              <option value="">Select a favorite</option>
+              {sourceFavorites.map((favorite, index) => (
+                <option key={index} value={favorite}>
+                  {favorite}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="to-file-types">
-          <label>To File Type:</label>
-          <select
-            value={toFileType}
-            onChange={(e) => setToFileType(e.target.value)}
-          >
-            <option value="webp">webp</option>
-            <option value="jpeg">jpeg</option>
-            <option value="png">png</option>
-            <option value="tif">tif</option>
-          </select>
+              <label>File Type:</label>
+              <select
+                value={toFileType}
+                onChange={(e) => setToFileType(e.target.value)}
+              >
+                <option value="webp">webp</option>
+                <option value="jpeg">jpeg</option>
+                <option value="png">png</option>
+                <option value="tif">tif</option>
+              </select>
+              <div className="file-quality">
+              <label>Quality:</label>
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={quality}
+                onChange={(e) => setQuality(Number(e.target.value))}
+              />
+            </div>
+          </div>
+            <div className="file-types">
+              
+
+          </div>
         </div>
       </div>
 
-      <div className="favorites">
-          <label>Favorites:</label>
-          <select
-            onChange={(e) => handleSelectFavoriteDestination(e.target.value)}
-            value={sourcePath}
-          >
-            <option value="">Select a favorite</option>
-            {sourceFavorites.map((favorite, index) => (
-              <option key={index} value={favorite}>
-                {favorite}
-              </option>
-            ))}
-          </select>
-        </div>
 
-      <div className="file-types">
-
-
-        <div className="file-quality">
-          <label>Quality:</label>
-          <input
-            type="number"
-            min="1"
-            max="100"
-            value={quality}
-            onChange={(e) => setQuality(Number(e.target.value))}
-          />
-        </div>
-      </div>
       <div>
         <InformationViewer fileCount={fileCount} totalTime={totalTime} />
       </div>
@@ -262,12 +271,11 @@ function App() {
         onClick={handleConvertImages}
         disabled={isConverting}
       >
-        {isConverting ? "Converting..." : "Convert Images"}
+        {isConverting ? "Converting..." : "Convert"}
       </button>
 
       {message && <p className="status-message">{message}</p>}
-        </div>
-      </div>
+  </div>
   );
 }
 

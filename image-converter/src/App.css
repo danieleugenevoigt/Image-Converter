@@ -1,5 +1,25 @@
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  height: 18px;
+  width: 150px;
+}
+
+input:hover {
+  border-color: #007bff;
+}
+
+label {
+  text-align: left;
+  min-width: 140px;
+}
+
 select {
-  width: 220px;
+  width: 150px;
+  margin-left: .5rem;
   padding: 8px;
   overscroll-behavior: contain;
 }
@@ -20,17 +40,18 @@ select {
 }
 .favorites label {
   margin-bottom: 0px;
-  color: greenyellow;
+  margin-left: 5px;
+  min-width: 140px;
 }
 
-.file-types {
+.from-file-types {
+  align-items: flex-start;
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   gap: 10px;
   margin-bottom: 20px;
-  margin-left: auto;
+  margin-left: 5px;
   margin-right: auto;
-  width: 60VW;
 }
 .file-type {
   display: flex;
@@ -66,18 +87,27 @@ select {
 
 .file-quality input {
   margin-right: 5px;
-  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  flex: 1;
+  height: 18px;
+  width: 50px;
 }
 
-
+.from-container {
+  background-color: #515652;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  min-height: 20vh;
+  max-width: 100vw;
+}
 
 .path-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  height: 50vh;
+  justify-content: space-between;
   margin: 20px 0;
 }
 
@@ -85,6 +115,7 @@ select {
   align-items: self-start;
   display: flex;
   flex-direction: row;
+  margin: 15px 5px 15px 5px;
   width: 50vw;;
 }
 
@@ -92,25 +123,41 @@ select {
   align-items: self-start;
   display: flex;
   flex-direction: row;
+  margin: 15px 5px 15px 5px;
   width: 50vw;;
 }
 
-input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-left: 2rem;
-  margin-right: 2rem;
+.to-container {
+  background-color: #515652;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4rem;
+  min-height: 20vh;
+  max-width: 100vw;
+}
+
+.to-file-types {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  margin-right: auto;
 }
 
 button {
-  padding: 8px 12px;
   border: none;
+  border-radius: 4px;
   background-color: #007bff;
   color: white;
   cursor: pointer;
-  border-radius: 4px;
+  height: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 2px;
+  width: 40px;
+  
 }
 
 button:hover {
@@ -118,7 +165,7 @@ button:hover {
 }
 
 .convert-button {
-  margin-top: 20px;
-  padding: 10px 20px;
   font-size: 16px;
+  margin-top: 20px;
+  width: 90px;
 }
