@@ -3,6 +3,7 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import InformationViewer from "./InformationViewer/InformationViewer.jsx";
 import { Store } from '@tauri-apps/plugin-store';
+import { exists, mkdir } from "@tauri-apps/plugin-fs";
 import "./App.css";
 
 
@@ -158,8 +159,16 @@ function App() {
               title={sourcePath}
               type="text"
               value={sourcePath}
-              readOnly
-              placeholder="Select source folder"
+              placeholder="Select or type source folder"
+              onChange={(e) => setSourcePath(e.target.value)} // Allow typing
+              onBlur={async () => {
+                const folderExists = await exists(sourcePath);
+                if (!folderExists) {
+                  setMessage("Source folder does not exist. Please enter a valid folder.");
+                } else {
+                  setMessage(""); // Clear any previous error message
+                }
+              }}
             />
             <button onClick={handleBrowseSource} title="Browse">
               <span className="material-icons">folder_open</span>
@@ -206,8 +215,22 @@ function App() {
               title={destinationPath}
               type="text"
               value={destinationPath}
-              readOnly
-              placeholder="Select destination folder"
+              placeholder="Select or type destination folder"
+              onChange={(e) => setDestinationPath(e.target.value)} // Allow typing
+              onBlur={async () => {
+                const folderExists = await exists(destinationPath);
+                if (!folderExists) {
+                  try {
+                    await mkdir(destinationPath, { recursive: true });
+                    setMessage("Destination folder was created successfully.");
+                  } catch (error) {
+                    console.error("Error creating destination folder:", error);
+                    setMessage("Failed to create destination folder. Check the console for details.");
+                  }
+                } else {
+                  setMessage(""); // Clear any previous message
+                }
+              }}
             />
             <button onClick={handleBrowseDestination} title="Browse">
               <span className="material-icons">folder_open</span>

@@ -31,3 +31,4 @@ tiff = "0.9.1"
 magick_rust = "1.0.0"
 
 tauri-plugin-store = "2"
+tauri-plugin-fs = "2"
