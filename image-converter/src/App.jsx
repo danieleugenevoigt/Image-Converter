@@ -1,11 +1,10 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, use } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import InformationViewer from "./InformationViewer/InformationViewer.jsx";
 import { Store } from '@tauri-apps/plugin-store';
 import { exists, mkdir } from "@tauri-apps/plugin-fs";
 import "./App.css";
-
 
 function App() {
   const [sourcePath, setSourcePath] = useState("");
@@ -20,15 +19,16 @@ function App() {
   const [sourceFavorites, setSourceFavorites] = useState([]);
   const [destinationFavorites, setDestinationFavorites] = useState([]);
 
- 
   let store = useRef(null);
 
   async function initStore() {
     store = await Store.load(".settings.dat");
 }
 
+ // create useEffect to load source favorites from store
+
   useEffect(() => {
-    async function loadFavorites() {
+    async function loadSourceFavorites() {
       await initStore();
       const stored = await store.get("favorites");
       if (stored && Array.isArray(stored)) {
@@ -37,9 +37,26 @@ function App() {
       }
     }
   
-    loadFavorites();
+    loadSourceFavorites();
   },[]);
   
+  // create useEffect to load destination favorites from store
+
+   useEffect(() => {
+    async function loadDestinationFavorites() {
+      await initStore();
+      const stored = await store.get("destinationFavorites");
+      if (stored && Array.isArray(stored)) {
+        setDestinationFavorites(stored);
+        console.log("Loaded from Tauri store:", stored);
+      }
+    }
+    loadDestinationFavorites();
+  }, []);
+
+  // create useEffect to save source favorites to store
+  // when sourceFavorites changes
+  // and save it to the Tauri store
 
   useEffect(() => {
     async function saveFavoritesSource() {
@@ -55,6 +72,24 @@ function App() {
     }
   }, [sourceFavorites]);
   
+  // create useEffect to save destination favorites to store
+  // when destinationFavorites changes
+  // and save it to the Tauri store
+
+  useEffect(() => {
+    async function saveFavoritesDestination() {
+      console.log("Saving destination favorites to store:", setDestinationFavorites);
+      await initStore();
+      await store.set("destinationFavorites", destinationFavorites);
+      await store.save(); // Required to persist to disk
+      console.log("Saved to Tauri store:", destinationFavorites);
+    }
+    if (destinationFavorites.length) {
+      saveFavoritesDestination(); 
+    }
+  }, [destinationFavorites]);
+
+ // Function to handle browsing for the source folder
 
   const handleBrowseSource = async () => {
     try {
@@ -66,9 +101,8 @@ function App() {
     }
   };
 
-/// Function to add the current source path to favorites
+  // Function to add the current source path to favorites
   // and save it to the Tauri store
-
   const handleAddToFavoritesSource = async () => {
     if (sourcePath && !sourceFavorites.includes(sourcePath)) {
       setSourceFavorites([...sourceFavorites, sourcePath]);
@@ -78,12 +112,26 @@ function App() {
     }
   };
 
+  // Function to remove the current source path from favorites
+  // and save it to the Tauri store
+
+  const handleRemoveFavoriteSource = () => {
+    if (sourcePath && sourceFavorites.includes(sourcePath)) {
+      setSourceFavorites(sourceFavorites.filter((item) => item !== sourcePath));
+      setMessage("Favorite removed successfully!");
+      setSourcePath(""); // Clear the selection after removal
+    } else {
+      setMessage("No favorite selected to remove.");
+    }
+  };
+
   // Function to handle selection of a favorite source path
   // and set it as the current source path
   const handleSelectFavoriteSource = (favorite) => {
     setSourcePath(favorite);
   };
 
+  // Function to handle browsing for the destination folder
   const handleBrowseDestination = async () => {
     try {
       const selected = await open({ directory: true });
@@ -106,11 +154,35 @@ function App() {
     }
   };
 
+  /// Function to remove the current destination path from favorites
+  // and save it to the Tauri store
+
+  const handleRemoveFavoriteDestination = () => {
+    if (destinationPath && destinationFavorites.includes(destinationPath)) {
+      setDestinationFavorites(destinationFavorites.filter((item) => item !== destinationPath));
+      setMessage("Favorite removed successfully!");
+      setDestinationPath(""); // Clear the selection after removal
+    } else {
+      setMessage("No favorite selected to remove.");
+    }
+  };
+
   // Function to handle selection of a favorite destination path
-  // and set it as the current destination path
+  
   const handleSelectFavoriteDestination = (favorite) => {
     setDestinationPath(favorite);
   };
+
+
+  // Function to handle the conversion process
+  // It invokes the Rust backend to perform the conversion
+  // and updates the UI with the results
+  // It also handles errors and updates the message state
+  // to display the status of the conversion process
+  // It also updates the fileCount and totalTime state
+  // to display the number of files converted and the total time taken
+  // It also updates the isConverting state to disable the button
+  // while the conversion is in progress
 
   const handleConvertImages = async () => {
     if (!sourcePath || !destinationPath) {
@@ -122,11 +194,6 @@ function App() {
     setTotalTime(0);
     setIsConverting(true);
     setMessage("Converting images...");
-    console.log("Converting images with the following parameters:");
-    console.log("Source Path:", sourcePath);
-    console.log("Destination Path:", destinationPath);
-    console.log("From File Type:", fromFileType);
-    console.log("To File Type:", toFileType);
   
     try {
       const data = await invoke("convert_images", { 
@@ -170,14 +237,23 @@ function App() {
                 }
               }}
             />
-            <button onClick={handleBrowseSource} title="Browse">
+            <button 
+              onClick={handleBrowseSource} 
+              title="Browse">
               <span className="material-icons">folder_open</span>
             </button>
-            <button onClick={handleAddToFavoritesSource} title="Add To Favorites">
+            <button 
+              onClick={handleAddToFavoritesSource} 
+              title="Add To Favorites">
               <span className="material-icons">favorite_border</span>
             </button>
-
-
+            <button
+              onClick={handleRemoveFavoriteSource}
+              title="Remove Selected Favorite"
+              disabled={!sourcePath || !sourceFavorites.includes(sourcePath)}
+            >
+              <span className="material-icons">delete</span>
+            </button>
           </div>
 
           <div className="favorites">
@@ -232,13 +308,23 @@ function App() {
                 }
               }}
             />
-            <button onClick={handleBrowseDestination} title="Browse">
+            <button 
+              onClick={handleBrowseDestination} 
+              title="Browse">
               <span className="material-icons">folder_open</span>
             </button>
-            <button onClick={handleAddToFavoritesDestination} title="Add To Favorites">
+            <button 
+              onClick={handleAddToFavoritesDestination} 
+              title="Add To Favorites">
               <span className="material-icons">favorite_border</span>
             </button>
-
+            <button
+              onClick={handleRemoveFavoriteDestination}
+              title="Remove Selected Favorite"
+              disabled={!destinationPath || !destinationFavorites.includes(destinationPath)}
+            >
+              <span className="material-icons">delete</span>
+            </button>
 
           </div>
 
@@ -246,10 +332,10 @@ function App() {
             <label>Favorites:</label>
             <select
               onChange={(e) => handleSelectFavoriteDestination(e.target.value)}
-              value={sourcePath}
+              value={destinationPath}
             >
               <option value="">Select a favorite</option>
-              {sourceFavorites.map((favorite, index) => (
+              {destinationFavorites.map((favorite, index) => (
                 <option key={index} value={favorite}>
                   {favorite}
                 </option>
@@ -271,24 +357,20 @@ function App() {
               <select
                 value={quality}
                 onChange={(e) => setQuality(Number(e.target.value))}
-                >
-                  <option value="100">Best Quality</option>
-                  <option value="95">Very High Quality</option>
-                  <option value="90">High Quality</option>
-                  <option value="80">Medium Quality</option>
-                  <option value="70">Low Quality</option>
-                  <option value="60">Very Low Quality</option>
-                  <option value="50">Extreme Low Quality</option>
-              </select>
-            
-          </div>
-            <div className="file-types">
-              
+                title="Select the quality of the output file. Higher values mean better quality but larger file sizes."
 
+                >
+                  <option value="100">Best Quality (100%)</option>
+                  <option value="95">Very High Quality (95%)</option>
+                  <option value="90">High Quality (90%)</option>
+                  <option value="80">Medium Quality (80%)</option>
+                  <option value="70">Low Quality (70%)</option>
+                  <option value="60">Very Low Quality (70%)</option>
+                  <option value="50">Extreme Low Quality (50%)</option>
+              </select>
           </div>
         </div>
       </div>
-
 
       <div>
         <InformationViewer fileCount={fileCount} totalTime={totalTime} />
