@@ -1,10 +1,28 @@
+/* Element Selectors */
+button {
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  height: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 2px;
+  width: 40px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
 input {
-  padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  height: 18px;
   margin-left: 1rem;
   margin-right: 1rem;
-  height: 18px;
+  padding: 8px;
   width: 150px;
 }
 
@@ -13,24 +31,33 @@ input:hover {
 }
 
 label {
-  text-align: left;
   min-width: 140px;
+  text-align: left;
 }
 
 select {
-  width: 150px;
-  margin-left: .5rem;
-  padding: 8px;
+  margin-left: 0.5rem;
   overscroll-behavior: contain;
+  padding: 8px;
+  width: 150px;
 }
+
+/* Class Selectors */
 .app-container {
+  align-items: right;
   display: flex;
   flex-direction: column;
-  align-items: right;
   justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
-  max-width: 80vw;
-  margin: auto;
+  width: 65vw;
+}
+
+.convert-button {
+  font-size: 16px;
+  margin-top: 20px;
+  width: 90px;
 }
 
 .favorites {
@@ -38,10 +65,66 @@ select {
   flex-direction: row;
   gap: 10px;
 }
+
 .favorites label {
   margin-bottom: 0px;
   margin-left: 5px;
   min-width: 140px;
+}
+
+.file-quality label {
+  margin-bottom: 15px;
+  margin-left: 5px;
+  min-width: 140px;
+}
+
+.file-quality select {
+  margin-bottom: 5px;
+}
+
+.file-type {
+  align-items: center;
+  display: flex;
+  gap: 5px;
+}
+
+.file-type input {
+  margin-right: 5px;
+}
+
+.file-type input:checked + label {
+  font-weight: bold;
+}
+
+.file-type input:checked + label::before {
+  color: green;
+  content: '✓';
+}
+
+.file-type input:not(:checked) + label::before {
+  color: red;
+  content: '✗';
+}
+
+.file-type label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.file-type label::before {
+  color: red;
+  content: '✗';
+  margin-right: 5px;
+}
+
+.from-container {
+  background-color: #515652;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  max-width: 100vw;
+  min-height: 20vh;
 }
 
 .from-file-types {
@@ -53,54 +136,15 @@ select {
   margin-left: 5px;
   margin-right: auto;
 }
-.file-type {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.file-type input {
-  margin-right: 5px;
-}
-.file-type label {
-  cursor: pointer;
-}
-.file-type input:checked + label {
-  font-weight: bold;
-}
-.file-type input:checked + label::before {
-  content: '✓';
-  color: green;
-}
-.file-type input:not(:checked) + label::before {
-  content: '✗';
-  color: red;
-}
-.file-type label::before {
-  content: '✗';
-  color: red;
-  margin-right: 5px;
-}
-.file-type label {
-  cursor: pointer;
-  user-select: none;
-}
 
-.file-quality input {
-  margin-right: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  height: 18px;
-  width: 50px;
-}
-
-.from-container {
-  background-color: #515652;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 2rem;
-  min-height: 20vh;
-  max-width: 100vw;
+.material-symbols-outlined {
+  background-color: #007BFF;
+  font-size: 2rem;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 200,
+    'GRAD' 0,
+    'opsz' 36;
 }
 
 .path-container {
@@ -115,16 +159,16 @@ select {
   align-items: self-start;
   display: flex;
   flex-direction: row;
-  margin: 15px 5px 15px 5px;
-  width: 50vw;;
+  margin: 15px 5px;
+  width: 50vw;
 }
 
 .path-output {
   align-items: self-start;
   display: flex;
   flex-direction: row;
-  margin: 15px 5px 15px 5px;
-  width: 50vw;;
+  margin: 15px 5px;
+  width: 50vw;
 }
 
 .to-container {
@@ -133,8 +177,8 @@ select {
   display: flex;
   flex-direction: column;
   margin-bottom: 4rem;
-  min-height: 20vh;
   max-width: 100vw;
+  min-height: 20vh;
 }
 
 .to-file-types {
@@ -144,28 +188,4 @@ select {
   margin-bottom: 20px;
   margin-left: 5px;
   margin-right: auto;
-}
-
-button {
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  height: 30px;
-  margin-left: 5px;
-  margin-right: 5px;
-  padding: 2px;
-  width: 40px;
-  
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.convert-button {
-  font-size: 16px;
-  margin-top: 20px;
-  width: 90px;
 }

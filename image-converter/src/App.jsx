@@ -267,16 +267,20 @@ function App() {
                 <option value="png">png</option>
                 <option value="tif">tif</option>
               </select>
-              <div className="file-quality">
-              <label>Quality:</label>
-              <input
-                type="number"
-                min="1"
-                max="100"
+              
+              <select
                 value={quality}
                 onChange={(e) => setQuality(Number(e.target.value))}
-              />
-            </div>
+                >
+                  <option value="100">Best Quality</option>
+                  <option value="95">Very High Quality</option>
+                  <option value="90">High Quality</option>
+                  <option value="80">Medium Quality</option>
+                  <option value="70">Low Quality</option>
+                  <option value="60">Very Low Quality</option>
+                  <option value="50">Extreme Low Quality</option>
+              </select>
+            
           </div>
             <div className="file-types">
               
