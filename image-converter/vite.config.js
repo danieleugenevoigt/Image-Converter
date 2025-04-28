@@ -8,7 +8,7 @@ export default defineConfig({
     exclude: ["@tauri-apps/api"], // Prevent Vite from trying to pre-bundle it
   },
   server: {
-    port: 5173,
+    open: false,
   },
   build: {
     outDir: 'dist',
