@@ -74,5 +74,5 @@ To build and run the application locally, you’ll need:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/image-converter.git
+   git clone https://github.com/danieleugenevoigt/Image-Converter.git
    cd image-converter
