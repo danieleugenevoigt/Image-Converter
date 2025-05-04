@@ -15,7 +15,7 @@ function App() {
   const [toFileType, setToFileType] = useState("webp");
   const [fileCount, setFileCount] = useState(0);
   const [averageStartingFileSize, setAverageStartingFileSize] = useState(0);
-  // const [averageEndingFileSize, setAverageEndingFileSize] = useState(0);
+  const [averageEndingFileSize, setAverageEndingFileSize] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [quality, setQuality] = useState(90);
   const [sourceFavorites, setSourceFavorites] = useState([]);
@@ -181,8 +181,10 @@ function App() {
   // and updates the UI with the results
   // It also handles errors and updates the message state
   // to display the status of the conversion process
-  // It also updates the fileCount and totalTime state
-  // to display the number of files converted and the total time taken
+  // It also updates the fileCount, totalTime state,
+  // averageStartingFileSize, and averageEndingFileSize states
+  // to display the number of files converted, the total time taken,
+  // and the average file sizes before and after conversion
   // It also updates the isConverting state to disable the button
   // while the conversion is in progress
 
@@ -209,6 +211,7 @@ function App() {
       setFileCount(data[0]);
       setTotalTime(data[1].toFixed(3)); 
       setAverageStartingFileSize(data[2].toFixed(1));
+      setAverageEndingFileSize(data[3].toFixed(1));
       setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
@@ -377,7 +380,7 @@ function App() {
       </div>
 
       <div>
-        <InformationViewer fileCount={fileCount} totalTime={totalTime} avgStartFileSize={averageStartingFileSize} />
+        <InformationViewer fileCount={fileCount} totalTime={totalTime} avgStartFileSize={averageStartingFileSize} avgEndFileSize={averageEndingFileSize}/>
       </div>
       <button
         className="convert-button"

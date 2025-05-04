@@ -3,6 +3,16 @@
 }
 
 .information-viewer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: auto;
+  max-height: 20vh;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.information-viewer-container {
   align-items: top;
   background-color: #515652;
   border-radius: 5px;
@@ -16,9 +26,10 @@
   text-align: left;
 }
 
-.information-viewer h2 {
+.information-viewer-container h2 {
   color: #ffffff;
   font-size: 1rem;
+  margin: auto;
   padding: 0rem;
 }
 
@@ -27,4 +38,9 @@
   font-size: 0.8rem;
   font-style: italic;
   padding: 0rem;
+}
+
+.data-column {
+  display: flex;
+  flex-direction: column;
 }
