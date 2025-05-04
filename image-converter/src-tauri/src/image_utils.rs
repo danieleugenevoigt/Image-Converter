@@ -15,7 +15,7 @@ pub fn convert_images(
     input_file_type: String,
     output_file_type: String,
     quality: f32,
-) -> Result<(usize, f64), String> {
+) -> Result<(usize, f64, f64), String> {
     let input_path = Path::new(&input_dir);
     let output_path = Path::new(&output_dir);
 
@@ -26,6 +26,9 @@ pub fn convert_images(
 
     // Read all files in the input directory
     let entries = fs::read_dir(input_path).map_err(|e| e.to_string())?;
+    let average_starting_file_size = 0u64;
+    let mut total_file_size = 0u64;
+
     let mut file_count = 0;
     let start_time = Instant::now();
 
@@ -37,6 +40,10 @@ pub fn convert_images(
         if input_file_type == "*"
             || path.extension().and_then(|ext| ext.to_str()) == Some(input_file_type.as_str())
         {
+            // Get the file size and add it to the total
+            let metadata = fs::metadata(&path).map_err(|e| e.to_string())?;
+            total_file_size += metadata.len();
+
             let file_stem = path
                 .file_stem()
                 .and_then(|s| s.to_str())
@@ -71,8 +78,13 @@ pub fn convert_images(
         }
     }
     let total_time = start_time.elapsed().as_millis() as f64 / 1000.0;
+    let average_starting_file_size = if file_count > 0 {
+        total_file_size as f64 / file_count as f64
+    } else {
+        0.0
+    };
     println!("Conversion completed in {:?}", total_time);
-    Ok((file_count, total_time))
+    Ok((file_count, total_time, average_starting_file_size))
 }
 
 /// Converts a single image file to WebP format.

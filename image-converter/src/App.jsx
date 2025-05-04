@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, use } from "react";
+import { useRef, useState, useEffect} from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 import InformationViewer from "./InformationViewer/InformationViewer.jsx";
@@ -14,6 +14,8 @@ function App() {
   const [fromFileType, setFromFileType] = useState("png");
   const [toFileType, setToFileType] = useState("webp");
   const [fileCount, setFileCount] = useState(0);
+  const [averageStartingFileSize, setAverageStartingFileSize] = useState(0);
+  // const [averageEndingFileSize, setAverageEndingFileSize] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
   const [quality, setQuality] = useState(90);
   const [sourceFavorites, setSourceFavorites] = useState([]);
@@ -205,7 +207,9 @@ function App() {
        });
        
       setFileCount(data[0]);
-      setTotalTime(data[1].toFixed(3));      setMessage("Conversion completed successfully!");
+      setTotalTime(data[1].toFixed(3)); 
+      setAverageStartingFileSize(data[2].toFixed(1));
+      setMessage("Conversion completed successfully!");
     } catch (error) {
       console.error("Error during conversion:", error);
       setMessage("Error during conversion. Check the console for details.");
@@ -373,7 +377,7 @@ function App() {
       </div>
 
       <div>
-        <InformationViewer fileCount={fileCount} totalTime={totalTime} />
+        <InformationViewer fileCount={fileCount} totalTime={totalTime} avgStartFileSize={averageStartingFileSize} />
       </div>
       <button
         className="convert-button"
