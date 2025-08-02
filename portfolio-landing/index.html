@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BICU - Batch Image Converter Utility</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>BICU</h1>
+            <h2>Batch Image Converter Utility</h2>
+            <p class="subtitle">A powerful desktop application for batch image conversion with an intuitive interface</p>
+        </header>
+
+        <section class="hero">
+            <div class="app-preview">
+                <img src="app-screenshot.png" alt="BICU Application Screenshot" onerror="this.style.display='none'">
+                <div class="placeholder-preview">
+                    <div class="mock-window">
+                        <div class="mock-titlebar">
+                            <div class="mock-buttons">
+                                <span class="mock-button red"></span>
+                                <span class="mock-button yellow"></span>
+                                <span class="mock-button green"></span>
+                            </div>
+                            <span class="mock-title">BICU - Batch Image Converter</span>
+                        </div>
+                        <div class="mock-content">
+                            <div class="mock-section">
+                                <span class="material-icons">folder_open</span>
+                                <span>Source Folder Selection</span>
+                            </div>
+                            <div class="mock-section">
+                                <span class="material-icons">transform</span>
+                                <span>Format Conversion Options</span>
+                            </div>
+                            <div class="mock-section">
+                                <span class="material-icons">save_alt</span>
+                                <span>Destination & Quality Settings</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <h3>Key Features</h3>
+            <div class="features-grid">
+                <div class="feature">
+                    <span class="material-icons">photo_library</span>
+                    <h4>Batch Processing</h4>
+                    <p>Convert multiple images at once with support for various formats including PNG, JPEG, WebP, and TIFF</p>
+                </div>
+                <div class="feature">
+                    <span class="material-icons">tune</span>
+                    <h4>Quality Control</h4>
+                    <p>Adjust compression quality from 50% to 100% to balance file size and image quality</p>
+                </div>
+                <div class="feature">
+                    <span class="material-icons">favorite</span>
+                    <h4>Favorites System</h4>
+                    <p>Save frequently used source and destination folders for quick access</p>
+                </div>
+                <div class="feature">
+                    <span class="material-icons">analytics</span>
+                    <h4>Conversion Analytics</h4>
+                    <p>View detailed statistics including file count, processing time, and file size comparisons</p>
+                </div>
+                <div class="feature">
+                    <span class="material-icons">speed</span>
+                    <h4>High Performance</h4>
+                    <p>Built with Rust backend for fast, efficient image processing</p>
+                </div>
+                <div class="feature">
+                    <span class="material-icons">desktop_mac</span>
+                    <h4>Cross-Platform</h4>
+                    <p>Native desktop application built with Tauri framework</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="tech-stack">
+            <h3>Built With</h3>
+            <div class="tech-list">
+                <span class="tech-badge">React</span>
+                <span class="tech-badge">Tauri</span>
+                <span class="tech-badge">Rust</span>
+                <span class="tech-badge">Vite</span>
+                <span class="tech-badge">CSS3</span>
+            </div>
+        </section>
+
+        <section class="download">
+            <h3>Download BICU</h3>
+            <p>Choose your platform to download the desktop application:</p>
+            
+            <div class="download-buttons">
+                <a href="#" class="download-btn mac available" onclick="showMacDownload()">
+                    <span class="material-icons">laptop_mac</span>
+                    <div>
+                        <strong>macOS</strong>
+                        <small>Intel & Apple Silicon</small>
+                    </div>
+                    <span class="download-badge">Available</span>
+                </a>
+                <a href="#" class="download-btn windows coming-soon" onclick="showComingSoon('Windows')">
+                    <span class="material-icons">laptop_windows</span>
+                    <div>
+                        <strong>Windows</strong>
+                        <small>64-bit</small>
+                    </div>
+                    <span class="download-badge">Coming Soon</span>
+                </a>
+                <a href="#" class="download-btn linux coming-soon" onclick="showComingSoon('Linux')">
+                    <span class="material-icons">laptop_chromebook</span>
+                    <div>
+                        <strong>Linux</strong>
+                        <small>AppImage</small>
+                    </div>
+                    <span class="download-badge">Coming Soon</span>
+                </a>
+            </div>
+            
+            <div class="system-requirements">
+                <h4>System Requirements</h4>
+                <ul>
+                    <li><strong>macOS:</strong> 10.15 or later</li>
+                    <li><strong>Windows:</strong> Windows 10 or later</li>
+                    <li><strong>Linux:</strong> Ubuntu 18.04+ or equivalent</li>
+                    <li><strong>RAM:</strong> 4GB minimum, 8GB recommended</li>
+                    <li><strong>Storage:</strong> 50MB free space</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="portfolio-note">
+            <div class="note-content">
+                <h4>Portfolio Project</h4>
+                <p>This application was developed as part of my software development portfolio. It showcases skills in:</p>
+                <ul>
+                    <li>Desktop application development with Tauri</li>
+                    <li>React frontend development</li>
+                    <li>Rust systems programming</li>
+                    <li>Image processing and file system operations</li>
+                    <li>User interface design and user experience</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>Developed by Daniel Voigt | <a href="https://github.com/danielvoigt" target="_blank">GitHub</a></p>
+            <p class="version">Version 0.1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        function showMacDownload() {
+            alert('macOS version is available! In a real deployment, this would download the .dmg file.\n\nFor this portfolio demonstration, the actual app has been built and is ready for distribution.');
+        }
+        
+        function showComingSoon(platform) {
+            alert(`${platform} version coming soon!\n\nThe app is currently built for macOS. Windows and Linux versions require additional build infrastructure setup (GitHub Actions CI/CD).`);
+        }
+    </script>
+</body>
+</html>

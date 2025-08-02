@@ -1,0 +1,13 @@
+{
+  "name": "bicu-landing-page",
+  "version": "1.0.0",
+  "description": "Landing page for BICU - Batch Image Converter Utility",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build needed - static HTML'",
+    "start": "python3 -m http.server 3000 || python -m SimpleHTTPServer 3000"
+  },
+  "keywords": ["image-converter", "portfolio", "tauri", "react"],
+  "author": "Daniel Voigt",
+  "license": "MIT"
+}
