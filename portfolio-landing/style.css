@@ -354,6 +354,45 @@ header h2 {
     border-bottom: none;
 }
 
+.security-notice {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    border-left: 4px solid #f39c12;
+}
+
+.security-notice h5 {
+    color: #d68910;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.security-notice p {
+    color: #85651d;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.security-notice ol {
+    color: #85651d;
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+.security-notice li {
+    margin-bottom: 5px;
+    border-bottom: none;
+    padding: 0;
+}
+
+.security-notice small {
+    color: #a0895c;
+    font-style: italic;
+}
+
 .portfolio-note {
     padding: 60px 0;
     background: linear-gradient(180deg, #e7e9f4 0%, #4d5a94  100%);
