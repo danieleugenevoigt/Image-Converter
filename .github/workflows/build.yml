@@ -32,8 +32,7 @@ jobs:
       - name: Install dependencies (Windows only)
         if: matrix.platform == 'windows-latest'
         run: |
-          # Windows ImageMagick setup would go here
-          echo "Windows build setup"
+          choco install imagemagick
 
       - name: Rust setup
         uses: dtolnay/rust-toolchain@stable
