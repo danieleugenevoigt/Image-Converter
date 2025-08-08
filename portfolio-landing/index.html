@@ -100,7 +100,7 @@
             <p>Choose your platform to download the desktop application:</p>
             
             <div class="download-buttons">
-                <a href="https://github.com/danieleugenevoigt/Image-Converter/releases/download/v0.1.0/rw.68288.image-converter_0.1.0_x64.dmg" class="download-btn mac available" download>
+                <a href="https://github.com/danieleugenevoigt/Image-Converter/releases/download/v0.1.3/image-converter_0.1.3_x64.dmg" class="download-btn mac available" download>
                     <span class="material-icons">laptop_mac</span>
                     <div>
                         <strong>macOS (Intel)</strong>
@@ -108,21 +108,21 @@
                     </div>
                     <span class="download-badge">Available</span>
                 </a>
-                <a href="#" class="download-btn windows coming-soon" onclick="showComingSoon('Windows')">
+                <a href="https://github.com/danieleugenevoigt/Image-Converter/releases/download/v0.1.3/image-converter_0.1.3_x64-setup.exe" class="download-btn windows available" download>
                     <span class="material-icons">laptop_windows</span>
                     <div>
                         <strong>Windows</strong>
                         <small>64-bit</small>
                     </div>
-                    <span class="download-badge">Coming Soon</span>
+                    <span class="download-badge">Available</span>
                 </a>
-                <a href="#" class="download-btn linux coming-soon" onclick="showComingSoon('Linux')">
+                <a href="https://github.com/danieleugenevoigt/Image-Converter/releases/download/v0.1.3/image-converter_0.1.3_amd64.AppImage" class="download-btn linux available" download>
                     <span class="material-icons">laptop_chromebook</span>
                     <div>
                         <strong>Linux</strong>
                         <small>AppImage</small>
                     </div>
-                    <span class="download-badge">Coming Soon</span>
+                    <span class="download-badge">Available</span>
                 </a>
             </div>
             
@@ -159,18 +159,12 @@
 
         <footer>
             <p>Developed by Daniel Voigt | <a href="https://github.com/danieleugenevoigt" target="_blank">GitHub</a></p>
-            <p class="version">Version 0.1.0</p>
+            <p class="version">Version 0.1.3</p>
         </footer>
     </div>
 
     <script>
-        function showMacDownload() {
-            alert('macOS version is available! In a real deployment, this would download the .dmg file.\n\nFor this portfolio demonstration, the actual app has been built and is ready for distribution.');
-        }
-        
-        function showComingSoon(platform) {
-            alert(`${platform} version coming soon!\n\nThe app is currently built for macOS. Windows and Linux versions require additional build infrastructure setup (GitHub Actions CI/CD).`);
-        }
+        // All platforms are now available for download
     </script>
 </body>
 </html>
