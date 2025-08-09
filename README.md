@@ -1,77 +1,56 @@
-# BICU - Batch Image Converter Utility
+# 📦 Batch Image Converter Utility (BICU)
 
-A powerful desktop application for batch image conversion built with Tauri, React, and Rust.
+A simple, fast, and customizable batch image converter built with **React**, **Vite**, **Rust**, and **Tauri**. It lets you convert large sets of images between formats with just a few clicks.
 
-## 🚀 Features
+This repository contains both the native desktop application and its portfolio landing page.
 
-- **Batch Processing**: Convert multiple images at once
-- **Multiple Formats**: Support for PNG, JPEG, WebP, and TIFF
-- **Quality Control**: Adjustable compression quality (50-100%)
-- **Favorites System**: Save frequently used source and destination folders
-- **Conversion Analytics**: View processing statistics and file size comparisons
-- **High Performance**: Rust backend for fast, efficient image processing
-- **Cross-Platform**: Native desktop application
+---
+
+## ✨ Key Features
+
+*   **Batch Processing**: Convert multiple images at once with support for various formats including PNG, JPEG, WebP, and TIFF.
+*   **Quality Control**: Adjust compression quality from 50% to 100% to balance file size and image quality.
+*   **Favorites System**: Save frequently used source and destination folders for quick access.
+*   **Conversion Analytics**: View detailed statistics including file count, processing time, and file size comparisons.
+*   **High Performance**: Built with a Rust backend for fast, efficient image processing.
+*   **Cross-Platform**: Native desktop application built with the Tauri framework.
+
+---
 
 ## 🛠 Tech Stack
 
 - **Frontend**: React, Vite, CSS3
 - **Backend**: Rust
 - **Framework**: Tauri
-- **Image Processing**: ImageMagick (via magick_rust)
-- **File System**: Tauri plugins for native file operations
+- **Image Processing**: `image` crate
 
-## 📱 Deployment
+---
 
-This project has two deployment configurations:
+## 📥 Download
 
-### 1. Desktop Application
-The main application is built as a native desktop app using Tauri.
+You can download the latest version of the application directly from the **GitHub Releases** page.
 
-**Available Platforms:**
-- ✅ **macOS**: Built and ready (Intel & Apple Silicon)
-- 🔄 **Windows**: Coming soon (requires CI/CD setup)
-- 🔄 **Linux**: Coming soon (requires CI/CD setup)
+| Platform | Status |
+|:---:|:---:|
+| **macOS** (Intel & Apple Silicon) | ✅ Available |
+| **Windows** (x64) | 🔄 Coming Soon |
+| **Linux** (AppImage) | ✅ Available |
 
-### 2. Portfolio Landing Page
-A professional landing page showcasing the application for portfolio purposes.
+> **⚠️ macOS Security Notice**
+> Since this app is not code-signed with a paid Apple Developer certificate, macOS may show a security warning. To run the app, **right-click** it and select "Open". You only need to do this once.
 
-**Location**: `/portfolio-landing/`
-**Deployed to**: Vercel
-**Purpose**: Showcase the desktop app and provide download links
+---
 
-## 🏗 Building
+## 🚀 How to Use
 
-### Prerequisites
-- Node.js (LTS version)
-- Rust (latest stable)
-- System dependencies:
-  - **macOS**: `brew install imagemagick`
-  - **Ubuntu**: `sudo apt-get install libmagickwand-dev`
-  - **Windows**: ImageMagick development libraries
+1.  **Open BICU**: Launch the application on your machine.
+2.  **Select Folders**: Choose a source folder with your images and a destination folder for the converted files.
+3.  **Choose Formats & Quality**: Select the input and output formats, and adjust the output quality.
+4.  **Convert**: Click the "Convert" button and watch the progress.
 
-### Build Commands
+---
 
-```bash
-# Navigate to the app directory
-cd image-converter
-
-# Install dependencies
-npm install
-
-# Development mode
-npm run tauri dev
-
-# Build for production
-npm run tauri build
-```
-
-### Cross-Platform Builds
-
-For automated cross-platform builds, use GitHub Actions:
-
-1. Push a tag: `git tag v1.0.0 && git push origin v1.0.0`
-2. The workflow will build for macOS, Windows, and Linux
-3. Releases are created automatically with downloadable assets
+## 🏗️ Development and Building
 
 ## 📁 Project Structure
 
@@ -123,23 +102,13 @@ python3 -m http.server 3000
 - **RAM**: 4GB minimum, 8GB recommended
 - **Storage**: 50MB free space
 
-## 🎯 Portfolio Notes
-
-This application demonstrates:
-- **Desktop Development**: Tauri framework expertise
-- **Frontend Skills**: Modern React with hooks and component architecture
-- **Backend Programming**: Rust systems programming
-- **Image Processing**: Working with native libraries and file systems
-- **UI/UX Design**: Intuitive interface design
-- **Cross-Platform Development**: Building for multiple operating systems
-- **CI/CD**: Automated build and release processes
 
 ## 📄 License
 
-MIT License - see LICENSE file for details
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## 👤 Author
 
 **Daniel Voigt**
-- GitHub: [@danielvoigt](https://github.com/danielvoigt)
+- GitHub: [@danielvoigt](https://github.com/danieleugenevoigt)
 - Portfolio: [Your portfolio URL]

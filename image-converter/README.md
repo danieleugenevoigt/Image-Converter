@@ -1,5 +1,9 @@
 # 📦 Batch Image Converter Utility (BICU) — Version 1.0.0
 
+> **Note:** This is the README for the `image-converter` application directory. For a high-level overview of the entire project repository, including the portfolio landing page and deployment information, please see the **root README.md**.
+
+---
+
 Welcome to the official release of **Batch Image Converter Utility (BICU)**!  
 BICU is a simple, fast, and customizable batch image converter built with **React**, **Vite**, **Rust**, and **Tauri**.  
 It lets you convert large sets of images between formats with just a few clicks — no coding required!
@@ -19,15 +23,9 @@ It lets you convert large sets of images between formats with just a few clicks 
 
 ---
 
-## 📥 Downloads
+## 📥 Download
 
-| Platform | File | Instructions |
-|:--------:|:----:|:-------------|
-| **Windows** | [`bicu-setup-1.0.0.exe`](#) | Download and run the installer. |
-| **macOS** | [`bicu-1.0.0.dmg`](#) | Download, open the DMG, and drag BICU to Applications. |
-| **Linux** | [`bicu-1.0.0.deb`](#) | Install via `sudo dpkg -i bicu-1.0.0.deb`. |
-
-> Replace `#` above with the actual file links once you upload them!
+You can download the latest version of the application from the GitHub Releases page.
 
 ---
 
