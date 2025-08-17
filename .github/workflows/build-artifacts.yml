@@ -1,0 +1,52 @@
+name: Build Artifacts Only
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_version:
+        description: 'Version to build (e.g., v0.1.6)'
+        required: true
+        default: 'v0.1.6'
+
+jobs:
+  build-mac:
+    strategy:
+      matrix:
+        runner: [macos-latest, macos-14]  # Intel and Apple Silicon
+        
+    runs-on: ${{ matrix.runner }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: brew install imagemagick
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: './image-converter/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./image-converter
+        run: npm ci
+
+      - name: Build
+        working-directory: ./image-converter  
+        run: npm run tauri:build
+
+      - name: List build artifacts
+        run: find image-converter/src-tauri/target/release/bundle -name "*.dmg" -o -name "*.app"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.runner }}
+          path: image-converter/src-tauri/target/release/bundle/dmg/*.dmg
+          if-no-files-found: error
