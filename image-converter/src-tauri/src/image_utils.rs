@@ -1,5 +1,5 @@
 use image::{GenericImageView, ImageReader};
-// use magick_rust::{CompressionType, MagickWand};  // Temporarily disabled for Apple Silicon testing
+use magick_rust::{CompressionType, MagickWand};
 use std::fs;
 use std::fs::File;
 use std::io::{BufWriter, Write};
@@ -187,12 +187,7 @@ fn convert_image_to_png(input_path: &Path, output_path: &Path) -> Result<(), Str
 }
 
 /// Converts an image to TIFF format.
-/// TEMPORARILY DISABLED: ImageMagick dependency causes issues on Apple Silicon
-fn convert_image_to_tiff(_input_path: &Path, _output_path: &Path, _quality: u8) -> Result<(), String> {
-    Err("TIFF conversion temporarily disabled for Apple Silicon compatibility".to_string())
-    
-    // Original ImageMagick-based implementation commented out for testing:
-    /*
+fn convert_image_to_tiff(input_path: &Path, output_path: &Path, quality: u8) -> Result<(), String> {
     magick_rust::magick_wand_genesis();
 
     // Create a new MagickWand instance
@@ -234,5 +229,4 @@ fn convert_image_to_tiff(_input_path: &Path, _output_path: &Path, _quality: u8) 
     );
 
     Ok(())
-    */
 }
