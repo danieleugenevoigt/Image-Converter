@@ -28,7 +28,7 @@ image = "0.25.5"
 png = "*"
 webp = "0.3.0"
 tiff = "0.9.1"
-magick_rust = "1.0.0"
+# magick_rust = "1.0.0"  # Temporarily disabled for Apple Silicon testing
 
 tauri-plugin-store = "2"
 tauri-plugin-fs = "2"
