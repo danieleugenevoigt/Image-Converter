@@ -63,12 +63,32 @@ jobs:
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          
+      - name: Display structure of downloaded files
+        run: find . -type f -name "*.dmg" -o -name "*.app"
         
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
-            release-*/image-converter/src-tauri/target/release/bundle/dmg/*.dmg
+          files: "**/*.dmg"
           draft: true
+          generate_release_notes: true
+          body: |
+            ## 🎉 Image Converter v0.1.4
+            
+            This release adds **Apple Silicon support**! Now available for both Intel and Apple Silicon Macs.
+            
+            ### 📦 Downloads
+            - **Intel Macs**: Download the `x64.dmg` file
+            - **Apple Silicon Macs (M1/M2/M3)**: Download the `aarch64.dmg` file
+            
+            ### ✨ What's New
+            - ✅ Native Apple Silicon (ARM64) support
+            - ✅ Cross-platform builds via GitHub Actions
+            - ✅ Automated release process
+            
+            Both versions include the same features and ImageMagick support.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
