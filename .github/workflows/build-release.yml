@@ -1,0 +1,74 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, macos-14] # macos-14 is ARM64, macos-latest is x64
+        
+    runs-on: ${{ matrix.platform }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (macOS)
+        if: matrix.platform == 'macos-latest' || matrix.platform == 'macos-14'
+        run: |
+          brew install imagemagick
+
+      - name: Rust setup
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './image-converter/src-tauri -> target'
+
+      - name: Sync node version and setup cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: './image-converter/package-lock.json'
+
+      - name: Install frontend dependencies
+        working-directory: ./image-converter
+        run: npm ci
+
+      - name: Build the app
+        working-directory: ./image-converter
+        run: npm run tauri build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.platform }}
+          path: |
+            image-converter/src-tauri/target/release/bundle/dmg/*.dmg
+            image-converter/src-tauri/target/release/bundle/macos/*.app
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release-*/image-converter/src-tauri/target/release/bundle/dmg/*.dmg
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
