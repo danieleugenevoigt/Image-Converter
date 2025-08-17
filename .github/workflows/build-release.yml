@@ -45,7 +45,7 @@ jobs:
 
       - name: Build the app
         working-directory: ./image-converter
-        run: npm run tauri build
+        run: npm run tauri:build
 
       - name: List built files
         run: |
