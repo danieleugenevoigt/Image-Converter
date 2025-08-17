@@ -26,6 +26,16 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Add Rust target for current architecture
+        run: |
+          if [[ "${{ matrix.runner }}" == "macos-14" ]]; then
+            rustup target add aarch64-apple-darwin
+            echo "Building for Apple Silicon (aarch64)"
+          else
+            rustup target add x86_64-apple-darwin
+            echo "Building for Intel (x86_64)"
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -43,6 +53,23 @@ jobs:
 
       - name: List build artifacts
         run: find image-converter/src-tauri/target/release/bundle -name "*.dmg" -o -name "*.app"
+
+      - name: Verify app architecture
+        run: |
+          # Mount the DMG and check the architecture
+          DMG_PATH=$(find image-converter/src-tauri/target/release/bundle/dmg -name "*.dmg" | head -1)
+          if [ -n "$DMG_PATH" ]; then
+            echo "Checking architecture of: $DMG_PATH"
+            hdiutil attach "$DMG_PATH" -mountpoint /tmp/verify_mount
+            APP_PATH=$(find /tmp/verify_mount -name "*.app" | head -1)
+            if [ -n "$APP_PATH" ]; then
+              BINARY_PATH="$APP_PATH/Contents/MacOS/image-converter"
+              echo "Binary path: $BINARY_PATH"
+              file "$BINARY_PATH"
+              lipo -info "$BINARY_PATH" || true
+            fi
+            hdiutil detach /tmp/verify_mount
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
