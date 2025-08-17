@@ -47,13 +47,17 @@ jobs:
         working-directory: ./image-converter
         run: npm run tauri build
 
-      - name: Upload artifacts
+      - name: List built files
+        run: |
+          echo "=== Build output structure ==="
+          find image-converter/src-tauri/target/release/bundle -type f -name "*.dmg" -o -name "*.app"
+
+      - name: Upload DMG only
         uses: actions/upload-artifact@v4
         with:
-          name: release-${{ matrix.platform }}
-          path: |
-            image-converter/src-tauri/target/release/bundle/dmg/*.dmg
-            image-converter/src-tauri/target/release/bundle/macos/*.app
+          name: dmg-${{ matrix.platform }}
+          path: image-converter/src-tauri/target/release/bundle/dmg/*.dmg
+          if-no-files-found: error
 
   release:
     needs: build
@@ -64,20 +68,18 @@ jobs:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         
-      - name: Display downloaded structure
+      - name: Show everything
         run: |
-          echo "=== Full directory structure ==="
-          find . -type f | head -20
-          echo "=== Looking for DMG files ==="
+          echo "=== Everything downloaded ==="
+          find . -type f | sort
+          echo "=== DMG files found ==="
           find . -name "*.dmg" -type f
-          echo "=== Looking for APP files ==="
-          find . -name "*.app" -type d
           
       - name: Collect DMG files
         run: |
           mkdir -p release-files
           find . -name "*.dmg" -type f -exec cp {} release-files/ \;
-          echo "Files to release:"
+          echo "=== Files ready for release ==="
           ls -la release-files/
         
       - name: Create Release
