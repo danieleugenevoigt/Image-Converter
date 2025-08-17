@@ -1,5 +1,10 @@
 name: Build and Release
 
+permissions:
+  contents: write
+  actions: read
+  packages: read
+
 on:
   push:
     tags:
@@ -89,33 +94,36 @@ jobs:
           TAG_NAME=${GITHUB_REF#refs/tags/}
           echo "Checking for existing release: $TAG_NAME"
           
-          # Try to delete existing release (ignore errors if it doesn't exist)
-          curl -X DELETE \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG_NAME" || true
-        
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: release-files/*
-          draft: true
-          generate_release_notes: true
-          fail_on_unmatched_files: true
-          body: |
-            ## 🎉 Image Converter v0.1.6
-            
-            This release adds **Apple Silicon support**! Now available for both Intel and Apple Silicon Macs.
-            
-            ### 📦 Downloads
-            - **Intel Macs**: Download the `x64.dmg` file
-            - **Apple Silicon Macs (M1/M2/M3)**: Download the `aarch64.dmg` file
-            
-            ### ✨ What's New
-            - ✅ Native Apple Silicon (ARM64) support
-            - ✅ Cross-platform builds via GitHub Actions
-            - ✅ Automated release process
-            
-            Both versions include the same features and ImageMagick support.
+          # Try to delete existing release using gh CLI (ignore errors if it doesn't exist)
+          gh release delete "$TAG_NAME" --yes --cleanup-tag || true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Create Release with GitHub CLI
+        run: |
+          # Extract tag name
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "Creating release for tag: $TAG_NAME"
+          
+          # Create release
+          gh release create "$TAG_NAME" \
+            --draft \
+            --generate-notes \
+            --title "BICU v$TAG_NAME" \
+            --notes "## 🎉 Image Converter $TAG_NAME
+
+This release adds **Apple Silicon support**! Now available for both Intel and Apple Silicon Macs.
+
+### 📦 Downloads
+- **Intel Macs**: Download the \`x64.dmg\` file
+- **Apple Silicon Macs (M1/M2/M3)**: Download the \`aarch64.dmg\` file
+
+### ✨ What's New
+- ✅ Native Apple Silicon (ARM64) support
+- ✅ Cross-platform builds via GitHub Actions
+- ✅ Automated release process
+
+Both versions include the same features and ImageMagick support." \
+            release-files/*
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
