@@ -89,7 +89,7 @@ jobs:
           draft: true
           generate_release_notes: true
           body: |
-            ## 🎉 Image Converter v0.1.5
+            ## 🎉 Image Converter v0.1.6
             
             This release adds **Apple Silicon support**! Now available for both Intel and Apple Silicon Macs.
             
