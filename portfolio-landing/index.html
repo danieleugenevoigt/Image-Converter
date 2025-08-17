@@ -147,13 +147,25 @@
                 
                 <div class="security-notice">
                     <h5>⚠️ macOS Security Notice</h5>
-                    <p>Since this app is not code-signed with an Apple Developer certificate, macOS may show a security warning. To run the app:</p>
+                    <p>Since this app is not code-signed with an Apple Developer certificate, macOS may show a security warning or "damaged" error. <strong>The app is safe</strong> - this is normal for unsigned apps.</p>
+                    
+                    <h6><strong>For Apple Silicon Macs (M1/M2/M3):</strong></h6>
+                    <ol>
+                        <li><strong>Download and save</strong> the DMG file</li>
+                        <li><strong>Open Terminal</strong> and run: <code>xattr -dr com.apple.quarantine ~/Downloads/image-converter_0.1.6_aarch64.dmg</code></li>
+                        <li><strong>Mount the DMG</strong> and drag the app to Applications</li>
+                        <li><strong>Right-click the app</strong> in Applications and select "Open"</li>
+                        <li>Click "Open" when the security dialog appears</li>
+                    </ol>
+                    
+                    <h6><strong>For Intel Macs:</strong></h6>
                     <ol>
                         <li><strong>Right-click</strong> the app and select "Open" (don't double-click)</li>
                         <li>Click "Open" when the security dialog appears</li>
                         <li><strong>Or:</strong> Go to System Settings → Privacy & Security → Click "Open Anyway"</li>
                     </ol>
-                    <p><small>This is a common requirement for unsigned developer tools and open-source applications.</small></p>
+                    
+                    <p><small>This is a common requirement for unsigned developer tools and open-source applications. Apple Silicon Macs require the quarantine removal step.</small></p>
                 </div>
             </div>
         </section>

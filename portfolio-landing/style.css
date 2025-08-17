@@ -393,6 +393,23 @@ header h2 {
     font-style: italic;
 }
 
+.security-notice h6 {
+    color: #d68910;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 20px 0 10px 0;
+}
+
+.security-notice code {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: Monaco, 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #2c3e50;
+    word-break: break-all;
+}
+
 .portfolio-note {
     padding: 60px 0;
     background: linear-gradient(180deg, #e7e9f4 0%, #4d5a94  100%);
